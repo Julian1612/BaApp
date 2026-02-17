@@ -2,7 +2,7 @@
 const UI = {
     libraryState: 'itm_grundlagen',
 
-    // Hilfsfunktion für echtes Random-Mischen
+    // Hilfsfunktion für echtes Random-Mischen (Fisher-Yates Shuffle)
     _shuffle: (array) => {
         const newArr = [...array];
         for (let i = newArr.length - 1; i > 0; i--) {
@@ -123,7 +123,10 @@ const UI = {
 
         if (tabName === 'foryou') {
             if(scrollWrapper) scrollWrapper.classList.add('hidden');
-            if(viewForyou) viewForyou.classList.remove('hidden');
+            if(viewForyou) {
+                viewForyou.classList.remove('hidden');
+                viewForyou.scrollTop = 0; // Sicherstellen, dass oben gestartet wird
+            }
             if(header) header.classList.add('-translate-y-full');
             
             // WILD RANDOM LOGIK: Immer neu mischen beim Tab-Wechsel

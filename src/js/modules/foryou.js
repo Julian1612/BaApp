@@ -7,6 +7,16 @@ const ForYou = {
         const view = document.getElementById('view-foryou');
         if (!view) return;
 
+        // LOOP LOGIK: Wenn am Ende angekommen, springe zum Anfang
+        view.addEventListener('scroll', () => {
+            if (view.scrollTop + view.clientHeight >= view.scrollHeight - 2) {
+                view.scrollTo({
+                    top: 0,
+                    behavior: 'instant'
+                });
+            }
+        });
+
         const options = {
             root: view,
             rootMargin: '0px',
@@ -33,7 +43,8 @@ const ForYou = {
             return;
         }
 
-        const shuffled = videos.sort(() => 0.5 - Math.random());
+        // Nutzt die shuffle-Logik aus UI für echtes "wildes" Würfeln
+        const shuffled = videos; 
         let html = '';
 
         shuffled.forEach(item => {
@@ -53,16 +64,16 @@ const ForYou = {
                 <div class="absolute right-4 bottom-24 flex flex-col items-center gap-6 z-20">
                     ${item.files.script ? `
                     <button onclick="event.stopPropagation(); app.reader.open('${item.files.script}', '${item.title}', '${item.id}')" class="flex flex-col items-center gap-1 group active:scale-90 transition">
-                        <div class="w-12 h-12 bg-gray-800/80 backdrop-blur text-white rounded-full flex items-center justify-center shadow-lg group-hover:bg-blue-600 transition">
-                            <i class="fas fa-align-left text-lg"></i>
+                        <div class="w-14 h-14 bg-gray-800/80 backdrop-blur text-white rounded-full flex items-center justify-center shadow-lg">
+                            <i class="fas fa-align-left text-xl"></i>
                         </div>
                         <span class="text-[10px] font-medium text-white shadow-black drop-shadow-md">Skript</span>
                     </button>` : ''}
                     
                     ${item.files.audio ? `
                     <button onclick="event.stopPropagation(); app.player.load('${item.files.audio}', '${item.title}', '${item.id}')" class="flex flex-col items-center gap-1 group active:scale-90 transition">
-                        <div class="w-12 h-12 bg-gray-800/80 backdrop-blur text-white rounded-full flex items-center justify-center shadow-lg group-hover:bg-green-600 transition">
-                            <i class="fas fa-headphones text-lg"></i>
+                        <div class="w-14 h-14 bg-gray-800/80 backdrop-blur text-white rounded-full flex items-center justify-center shadow-lg">
+                            <i class="fas fa-headphones text-xl"></i>
                         </div>
                         <span class="text-[10px] font-medium text-white shadow-black drop-shadow-md">Hören</span>
                     </button>` : ''}
@@ -70,14 +81,11 @@ const ForYou = {
 
                 <div class="absolute left-4 bottom-24 right-20 z-10 text-white pointer-events-none">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="bg-blue-600/80 backdrop-blur px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide shadow-sm">
+                        <span class="bg-blue-600/80 backdrop-blur px-2 py-0.5 rounded text-[10px] font-bold uppercase">
                             ${item.subjectKey === 'itm_grundlagen' ? 'ITM' : 'ORG'}
                         </span>
-                        <h3 class="font-bold text-lg leading-snug drop-shadow-md shadow-black">${item.title}</h3>
+                        <h3 class="font-bold text-xl drop-shadow-md">${item.title}</h3>
                     </div>
-                    <p class="text-xs text-gray-300 opacity-90 drop-shadow-md line-clamp-2">
-                        Tippe auf das Video zum Starten/Pausieren.
-                    </p>
                 </div>
 
                 <div class="play-icon absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300">
@@ -101,12 +109,7 @@ const ForYou = {
             if (!video) return;
 
             if (entry.isIntersecting) {
-                const playPromise = video.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(() => {
-                        console.log("Autoplay blockiert (User-Interaktion nötig).");
-                    });
-                }
+                video.play().catch(() => {});
                 ForYou.activeVideo = video;
             } else {
                 video.pause();
@@ -118,15 +121,14 @@ const ForYou = {
     togglePlay: (videoEl) => {
         const parent = videoEl.parentElement;
         const icon = parent.querySelector('.play-icon');
-        
         if (videoEl.paused) {
             videoEl.play();
-            icon.classList.remove('opacity-100');
             icon.classList.add('opacity-0');
+            icon.classList.remove('opacity-100');
         } else {
             videoEl.pause();
-            icon.classList.remove('opacity-0');
             icon.classList.add('opacity-100');
+            icon.classList.remove('opacity-0');
         }
     },
 
