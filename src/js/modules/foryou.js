@@ -2,14 +2,25 @@ const ForYou = {
     activeVideo: null,
     observer: null,
     currentSpeed: 1.0,
+    wakeLock: null, // Referenz für den Wachhalter
 
     init: () => {
         const view = document.getElementById('view-foryou');
         if (!view) return;
 
+        // Infinite Scroll Loop
         view.addEventListener('scroll', () => {
             if (view.scrollTop + view.clientHeight >= view.scrollHeight - 2) {
                 view.scrollTo({ top: 0, behavior: 'instant' });
+            }
+        });
+
+        // Wake Lock freigeben, wenn Tab gewechselt wird
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && ForYou.activeVideo && !ForYou.activeVideo.paused) {
+                ForYou.requestWakeLock();
+            } else {
+                ForYou.releaseWakeLock();
             }
         });
 
@@ -17,6 +28,28 @@ const ForYou = {
 
         if ('IntersectionObserver' in window) {
             ForYou.observer = new IntersectionObserver(ForYou.handleIntersection, options);
+        }
+    },
+
+    // Screen Wake Lock API: Verhindert Standby beim Abspielen
+    requestWakeLock: async () => {
+        try {
+            if ('wakeLock' in navigator && !ForYou.wakeLock) {
+                ForYou.wakeLock = await navigator.wakeLock.request('screen');
+            }
+        } catch (err) {
+            console.log('Wake Lock error:', err);
+        }
+    },
+
+    releaseWakeLock: async () => {
+        if (ForYou.wakeLock) {
+            try {
+                await ForYou.wakeLock.release();
+                ForYou.wakeLock = null;
+            } catch (err) {
+                console.log('Wake Lock release error:', err);
+            }
         }
     },
 
@@ -41,13 +74,21 @@ const ForYou = {
         shuffled.forEach(item => {
             html += `
             <div class="video-snap-item relative w-full h-full flex items-center justify-center bg-black border-b border-gray-800 shrink-0" data-id="${item.id}">
+                
+                <div class="video-time absolute top-12 left-1/2 -translate-x-1/2 z-20 pointer-events-none transition-opacity duration-500">
+                    <span class="text-[10px] font-medium tracking-widest text-white/40 bg-black/20 backdrop-blur-sm px-2 py-1 rounded-full border border-white/5">
+                        00:00 / 00:00
+                    </span>
+                </div>
+
                 <video 
                     src="${item.files.video}" 
                     class="h-full w-full object-contain bg-black" 
                     loop 
                     playsinline 
                     preload="metadata"
-                    onclick="ForYou.handleTap(event, this)">
+                    onclick="ForYou.handleTap(event, this)"
+                    ontimeupdate="ForYou.updateTime(this)">
                 </video>
                 
                 <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent pointer-events-none"></div>
@@ -101,37 +142,47 @@ const ForYou = {
         }
     },
 
-    // NEU: Verwaltet Klicks (Links/Mitte/Rechts)
+    // NEU: Update Zeit-String oben
+    updateTime: (videoEl) => {
+        const timeDisplay = videoEl.parentElement.querySelector('.video-time span');
+        if (!timeDisplay) return;
+
+        const current = ForYou.formatTime(videoEl.currentTime);
+        const total = ForYou.formatTime(videoEl.duration || 0);
+
+        timeDisplay.innerText = `${current} / ${total}`;
+    },
+
+    // Helfer: Sekunden zu MM:SS
+    formatTime: (seconds) => {
+        if (isNaN(seconds)) return "00:00";
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    },
+
     handleTap: (event, videoEl) => {
         const rect = videoEl.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const width = rect.width;
         const percentage = x / width;
 
-        // Linke 30% -> Zurückspulen
         if (percentage < 0.30) {
             videoEl.currentTime = Math.max(0, videoEl.currentTime - 10);
             ForYou.showSkipFeedback(videoEl.parentElement, 'back');
-        } 
-        // Rechte 30% -> Vorspulen
-        else if (percentage > 0.70) {
+        } else if (percentage > 0.70) {
             videoEl.currentTime = Math.min(videoEl.duration, videoEl.currentTime + 10);
             ForYou.showSkipFeedback(videoEl.parentElement, 'fwd');
-        } 
-        // Mitte -> Play/Pause
-        else {
+        } else {
             ForYou.togglePlay(videoEl);
         }
     },
 
-    // NEU: Zeigt kurzes visuelles Feedback (-10s / +10s)
     showSkipFeedback: (container, type) => {
-        // Altes Feedback entfernen falls vorhanden
         const existing = container.querySelector('.skip-feedback');
         if(existing) existing.remove();
 
         const el = document.createElement('div');
-        // Positionierung links oder rechts
         const positionClass = type === 'back' ? 'left-1/4' : 'right-1/4';
         
         el.className = `skip-feedback absolute top-1/2 ${positionClass} -translate-y-1/2 z-30 bg-black/70 backdrop-blur-md w-20 h-20 rounded-full flex flex-col items-center justify-center text-white animate-fade-in pointer-events-none border border-white/10`;
@@ -142,7 +193,6 @@ const ForYou = {
         
         container.appendChild(el);
 
-        // Nach kurzer Zeit ausblenden und entfernen
         setTimeout(() => {
             el.classList.add('opacity-0', 'transition-opacity', 'duration-300');
             setTimeout(() => el.remove(), 300);
@@ -159,11 +209,20 @@ const ForYou = {
                 const speedLabel = entry.target.querySelector('.speed-label');
                 if(speedLabel) speedLabel.innerText = ForYou.currentSpeed + 'x';
 
-                video.play().catch(() => {});
+                // NEU: Wake Lock aktivieren
+                video.play()
+                    .then(() => ForYou.requestWakeLock())
+                    .catch(() => {});
+                
                 ForYou.activeVideo = video;
             } else {
                 video.pause();
                 video.currentTime = 0;
+                
+                // NEU: Wake Lock deaktivieren (aber nur wenn wir wirklich das Video verlassen)
+                if (ForYou.activeVideo === video) {
+                    ForYou.releaseWakeLock();
+                }
             }
         });
     },
@@ -188,12 +247,15 @@ const ForYou = {
     togglePlay: (videoEl) => {
         const parent = videoEl.parentElement;
         const icon = parent.querySelector('.play-icon');
+        
         if (videoEl.paused) {
             videoEl.play();
+            ForYou.requestWakeLock(); // Wake Lock an
             icon.classList.add('opacity-0');
             icon.classList.remove('opacity-100');
         } else {
             videoEl.pause();
+            ForYou.releaseWakeLock(); // Wake Lock aus
             icon.classList.add('opacity-100');
             icon.classList.remove('opacity-0');
         }
@@ -201,5 +263,6 @@ const ForYou = {
 
     pauseAll: () => {
         document.querySelectorAll('video').forEach(v => v.pause());
+        ForYou.releaseWakeLock(); // Wake Lock sicherheitshalber aus
     }
 };
