@@ -1,0 +1,24 @@
+[
+  {
+    "id": "E01",
+    "title": "E01",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T14:55:05.647Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E01.md",
+      "audio": "content/itm_grundlagen/audio/E01.m4a"
+    }
+  },
+  {
+    "id": "E01",
+    "title": "E01",
+    "subject": "Org. & Projekte",
+    "subjectKey": "organisation_projekte",
+    "added": "2026-02-17T14:53:49.899Z",
+    "files": {
+      "script": "content/organisation_projekte/scripts/E01.md",
+      "audio": "content/organisation_projekte/audio/E01.m4a"
+    }
+  }
+]
