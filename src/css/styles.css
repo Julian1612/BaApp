@@ -74,3 +74,11 @@ body {
 }
 /* Wichtig damit Videos nicht vom Header verdeckt werden im ForYou Modus */
 #view-foryou { top: 0; padding-top: 0; z-index: 50; background: black; }
+
+.header-container {
+  position: sticky;
+  top: 0;
+  z-index: 100; /* Stellt sicher, dass der Header über dem Inhalt bleibt */
+  background-color: #1a1a1a; /* Nutze die exakte Hintergrundfarbe deiner App */
+  padding-bottom: 10px; /* Optional: Kleiner Abstand zum Inhalt */
+}
