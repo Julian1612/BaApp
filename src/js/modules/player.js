@@ -1,28 +1,83 @@
 const Player = {
     audio: null,
     btnPlay: null,
+    progressBar: null,
     currentSpeed: 1.0,
 
     init: () => {
-        Player.audio = document.getElementById('audio-element');
-        Player.btnPlay = document.getElementById('btn-play-pause');
+        let audio = document.getElementById('audio-element');
+        if (!audio) {
+            audio = document.createElement('audio');
+            audio.id = 'audio-element';
+            document.body.appendChild(audio);
+        }
+        Player.audio = audio;
         
-        // Event Listeners
-        document.getElementById('btn-play-pause').onclick = Player.togglePlay;
-        document.getElementById('btn-skip-back').onclick = () => Player.skip(-10);
-        document.getElementById('btn-skip-fwd').onclick = () => Player.skip(10);
-        document.getElementById('btn-speed').onclick = Player.cycleSpeed;
+        Player.btnPlay = document.getElementById('btn-play-pause');
+        Player.progressBar = document.getElementById('progress-bar');
+        
+        // Buttons verbinden
+        if(Player.btnPlay) Player.btnPlay.onclick = Player.togglePlay;
+        
+        const btnBack = document.getElementById('btn-skip-back');
+        if(btnBack) btnBack.onclick = () => Player.skip(-10);
+        
+        const btnFwd = document.getElementById('btn-skip-fwd');
+        if(btnFwd) btnFwd.onclick = () => Player.skip(10);
+        
+        // Speed Button wiederhergestellt
+        const btnSpeed = document.getElementById('btn-speed');
+        if(btnSpeed) btnSpeed.onclick = Player.cycleSpeed;
+
+        // Events
+        Player.audio.ontimeupdate = Player.updateProgress;
+        Player.audio.onended = () => Player.updateIcon(false);
     },
 
     load: (url, title, id) => {
-        document.getElementById('mini-player').classList.remove('hidden');
-        document.getElementById('player-title').innerText = title;
+        const playerEl = document.getElementById('mini-player');
+        const titleEl = document.getElementById('player-title');
+        
+        if(titleEl) titleEl.innerText = title;
+        
         Player.audio.src = url;
-        Player.audio.play();
+        Player.audio.play()
+            .then(() => {
+                // Media Session API (iOS Lockscreen Support)
+                if ('mediaSession' in navigator) {
+                    navigator.mediaSession.metadata = new MediaMetadata({
+                        title: title,
+                        artist: "Study App",
+                        album: "Semester 1",
+                        artwork: [
+                            { src: 'public/icons/icon-192.png', sizes: '192x192', type: 'image/png' }
+                        ]
+                    });
+
+                    navigator.mediaSession.setActionHandler('play', Player.togglePlay);
+                    navigator.mediaSession.setActionHandler('pause', Player.togglePlay);
+                    navigator.mediaSession.setActionHandler('seekbackward', () => Player.skip(-10));
+                    navigator.mediaSession.setActionHandler('seekforward', () => Player.skip(10));
+                }
+            })
+            .catch(e => console.error("Playback failed:", e));
+
         Player.updateIcon(true);
         
-        // Tracking für Spaced Repetition
-        if(id) SpacedRepetition.markAsReviewed(id);
+        // Speed Reset oder Beibehalten? Wir behalten ihn bei.
+        Player.audio.playbackRate = Player.currentSpeed;
+        
+        // Animation
+        if(playerEl) {
+            playerEl.classList.remove('hidden');
+            setTimeout(() => {
+                playerEl.classList.remove('translate-y-32');
+            }, 50);
+        }
+        
+        if(id && typeof SpacedRepetition !== 'undefined') {
+            SpacedRepetition.markAsReviewed(id);
+        }
     },
 
     togglePlay: () => {
@@ -36,12 +91,21 @@ const Player = {
     },
 
     updateIcon: (isPlaying) => {
+        if(!Player.btnPlay) return;
         const icon = Player.btnPlay.querySelector('i');
-        icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
+        if(icon) {
+            icon.className = isPlaying ? 'fas fa-pause text-sm' : 'fas fa-play text-sm';
+        }
     },
 
     skip: (seconds) => {
         Player.audio.currentTime += seconds;
+    },
+    
+    updateProgress: () => {
+        if(!Player.progressBar || !Player.audio.duration) return;
+        const percent = (Player.audio.currentTime / Player.audio.duration) * 100;
+        Player.progressBar.style.width = `${percent}%`;
     },
 
     cycleSpeed: () => {
@@ -49,6 +113,13 @@ const Player = {
         let idx = speeds.indexOf(Player.currentSpeed);
         Player.currentSpeed = speeds[(idx + 1) % speeds.length];
         Player.audio.playbackRate = Player.currentSpeed;
-        document.getElementById('btn-speed').innerText = Player.currentSpeed + 'x';
+        
+        const btnSpeed = document.getElementById('btn-speed');
+        if(btnSpeed) {
+            btnSpeed.innerText = Player.currentSpeed + 'x';
+            // Kleines visuelles Feedback
+            btnSpeed.classList.add('bg-blue-100', 'text-blue-600');
+            setTimeout(() => btnSpeed.classList.remove('bg-blue-100', 'text-blue-600'), 200);
+        }
     }
 };
