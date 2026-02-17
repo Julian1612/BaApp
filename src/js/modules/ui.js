@@ -3,6 +3,8 @@ const UI = {
 
     renderDashboard: async (content) => {
         const container = document.getElementById('view-dashboard');
+        if (!container) return; 
+
         const suggestions = SpacedRepetition.getSuggestions(content);
         const hour = new Date().getHours();
         const greeting = hour < 12 ? "Guten Morgen" : hour < 18 ? "Guten Tag" : "Guten Abend";
@@ -12,18 +14,14 @@ const UI = {
             const nugget = await UI.getDailyNugget(content);
             if(nugget) {
                 nuggetHtml = `
-                <div class="mb-6 bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 p-6 rounded-3xl shadow-lg relative overflow-hidden group">
-                     <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
-                        <i class="fas fa-lightbulb text-7xl text-yellow-500"></i>
-                     </div>
+                <div class="mb-6 bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 p-5 rounded-3xl shadow-lg relative overflow-hidden group">
                      <div class="relative z-10">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="text-xs font-bold uppercase tracking-wider text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded">Wissen des Tages</span>
-                            <span class="text-xs text-gray-400">${nugget.sourceTitle}</span>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded">Wissen des Tages</span>
                         </div>
-                        <p class="text-gray-200 text-xl font-medium leading-relaxed italic">"${nugget.text}"</p>
-                        <button onclick="app.reader.open('${nugget.sourceUrl}', '${nugget.sourceTitle}', '${nugget.sourceId}')" class="mt-5 text-base text-blue-400 font-bold hover:text-blue-300 transition flex items-center gap-2 p-2 -ml-2 rounded-lg active:bg-white/5">
-                            Ganzes Skript lesen <i class="fas fa-arrow-right text-sm"></i>
+                        <p class="text-gray-200 text-lg font-medium leading-relaxed italic">"${nugget.text}"</p>
+                        <button onclick="app.reader.open('${nugget.sourceUrl}', '${nugget.sourceTitle}', '${nugget.sourceId}')" class="mt-4 text-sm text-blue-400 font-medium hover:text-blue-300 transition flex items-center gap-1">
+                            Zum Skript <i class="fas fa-arrow-right text-xs"></i>
                         </button>
                      </div>
                 </div>`;
@@ -31,23 +29,20 @@ const UI = {
         } catch(e) { console.error(e); }
 
         let html = `
-        <div class="mb-8 animate-fade-in mt-2">
-            <h2 class="text-4xl font-bold text-white mb-2">${greeting}</h2>
-            <p class="text-gray-400 text-lg">Lerne heute etwas Neues.</p>
+        <div class="mb-6 animate-fade-in">
+            <h2 class="text-3xl font-bold text-white mb-1">${greeting}</h2>
+            <p class="text-gray-400">Lerne heute etwas Neues.</p>
         </div>
-        
         ${nuggetHtml}
-        
-        <h3 class="font-bold text-gray-300 mb-4 px-1 text-sm uppercase tracking-wider">Fokus der Woche</h3>
-        <div class="space-y-5">`;
+        <h3 class="font-bold text-gray-300 mb-3 px-1 text-sm uppercase tracking-wider">Fokus der Woche</h3>
+        <div class="space-y-4">`;
         
         suggestions.forEach(item => html += UI.createCard(item, true));
         
         if (suggestions.length === 0) {
             html += `
             <div class="bg-gray-800 p-8 rounded-3xl text-center border border-gray-700">
-                <i class="fas fa-check-circle text-5xl text-green-500 mb-4"></i>
-                <p class="font-bold text-white text-lg">Alles erledigt!</p>
+                <p class="font-medium text-white">Alles erledigt!</p>
             </div>`;
         }
         
@@ -58,86 +53,51 @@ const UI = {
     getDailyNugget: async (content) => {
         const today = new Date().toDateString();
         const stored = JSON.parse(localStorage.getItem('dailyNugget'));
-
         if (stored && stored.date === today) return stored;
-
+        
         const scriptItems = content.filter(c => c.files && c.files.script);
         if (scriptItems.length === 0) return null;
-
-        const randomItem = scriptItems[Math.floor(Math.random() * scriptItems.length)];
         
+        const randomItem = scriptItems[Math.floor(Math.random() * scriptItems.length)];
         try {
             const res = await fetch(randomItem.files.script);
             const text = await res.text();
-            
-            const paragraphs = text.split(/\n\n+/).filter(p => 
-                !p.trim().startsWith('#') && 
-                !p.trim().startsWith('![') && 
-                p.trim().length > 60 && 
-                p.trim().length < 400
-            );
-
+            const paragraphs = text.split(/\n\n+/).filter(p => !p.trim().startsWith('#') && p.trim().length > 60);
             if(paragraphs.length === 0) return null;
-
-            const randomPara = paragraphs[Math.floor(Math.random() * paragraphs.length)];
-            const cleanText = randomPara.replace(/[\*\_\[\]]/g, '');
-
+            
             const newNugget = {
                 date: today,
-                text: cleanText,
+                text: paragraphs[Math.floor(Math.random() * paragraphs.length)].replace(/[\*\_\[\]]/g, ''),
                 sourceTitle: randomItem.title,
                 sourceId: randomItem.id,
                 sourceUrl: randomItem.files.script
             };
-
             localStorage.setItem('dailyNugget', JSON.stringify(newNugget));
             return newNugget;
-
-        } catch(e) {
-            console.error("Nugget Error", e);
-            return null;
-        }
+        } catch(e) { return null; }
     },
 
     renderLibrary: (content) => {
         const container = document.getElementById('view-library');
-        const activeClass = "bg-gray-700 text-white shadow-sm font-bold border-gray-600";
-        const inactiveClass = "text-gray-400 hover:text-white font-medium hover:bg-white/5 border-transparent";
-        
+        if (!container) return;
+
         const isITM = UI.libraryState === 'itm_grundlagen';
         const filteredContent = content.filter(c => c.subjectKey === UI.libraryState);
+        const activeClass = "bg-gray-700 text-white shadow-sm font-semibold";
+        const inactiveClass = "text-gray-400 hover:text-white font-medium hover:bg-white/5";
 
         let html = `
-        <div class="sticky top-0 z-20 pb-4 bg-black pt-2"> 
-            <div class="bg-[#1c1c1e] p-1.5 rounded-xl flex text-sm border border-white/10 shadow-lg">
-                <button onclick="app.ui.setLibraryFilter('itm_grundlagen')" 
-                    class="flex-1 py-2.5 rounded-lg transition-all duration-200 border ${isITM ? activeClass : inactiveClass}">
-                    ITM Grundlagen
-                </button>
-                <button onclick="app.ui.setLibraryFilter('organisation_projekte')" 
-                    class="flex-1 py-2.5 rounded-lg transition-all duration-200 border ${!isITM ? activeClass : inactiveClass}">
-                    Org & Projekte
-                </button>
+        <div class="sticky top-0 z-20 pb-4 bg-black"> 
+            <div class="bg-[#1c1c1e] p-1 rounded-xl flex text-sm border border-white/10">
+                <button onclick="app.ui.setLibraryFilter('itm_grundlagen')" class="flex-1 py-1.5 rounded-lg transition ${isITM ? activeClass : inactiveClass}">ITM Grundlagen</button>
+                <button onclick="app.ui.setLibraryFilter('organisation_projekte')" class="flex-1 py-1.5 rounded-lg transition ${!isITM ? activeClass : inactiveClass}">Org & Projekte</button>
             </div>
         </div>
-        <div class="space-y-5 pb-32 animate-fade-in">
-        `;
+        <div class="space-y-4 pb-24 animate-fade-in">`;
         
-        if (filteredContent.length === 0) {
-            html += `<div class="text-center py-12 text-gray-500"><p>Leer.</p></div>`;
-        } else {
-            const title = isITM ? 'ITM Grundlagen' : 'Org & Projekte';
-            const color = isITM ? 'bg-blue-500' : 'bg-purple-500';
-            
-            html += `
-            <div class="flex items-center gap-3 mb-4 px-1 mt-2">
-                <span class="w-1.5 h-6 ${color} rounded-full"></span>
-                <h3 class="font-bold text-white text-2xl">${title}</h3>
-                <span class="text-xs text-gray-400 font-bold ml-auto border border-gray-700 px-3 py-1 rounded-full">${filteredContent.length}</span>
-            </div>
-            `;
-            filteredContent.forEach(item => html += UI.createCard(item));
-        }
+        if (filteredContent.length === 0) html += `<div class="text-center py-12 text-gray-500"><p>Leer.</p></div>`;
+        else filteredContent.forEach(item => html += UI.createCard(item));
+        
         html += '</div>';
         container.innerHTML = html;
     },
@@ -151,62 +111,71 @@ const UI = {
         const hasAudio = !!item.files.audio;
         const hasScript = !!item.files.script;
         const iconColor = item.subjectKey === 'itm_grundlagen' ? 'text-blue-400' : 'text-purple-400';
-        const iconClass = item.subjectKey === 'itm_grundlagen' ? 'fa-network-wired' : 'fa-project-diagram';
-        const bgColor = isHighlight ? 'bg-gray-800 border-gray-600 shadow-xl' : 'bg-[#1c1c1e] border-white/5';
-
-        const ankiLink = `anki://`; 
-
+        const bgColor = isHighlight ? 'bg-gray-800 border-gray-600 shadow-lg' : 'bg-[#1c1c1e] border-white/5';
+        
         return `
-        <div class="${bgColor} p-5 rounded-3xl flex flex-col gap-4 transition active:scale-[0.98] duration-200 border">
+        <div class="${bgColor} p-4 rounded-2xl flex flex-col gap-3 transition active:scale-[0.98] duration-200 border">
             <div class="flex justify-between items-start">
-                <div class="overflow-hidden pr-2">
-                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5 block">${item.id}</span>
-                    <h4 class="font-bold text-white leading-tight text-xl truncate py-0.5">${item.title}</h4>
+                <div>
+                    <span class="text-[10px] font-bold uppercase text-gray-500">${item.id}</span>
+                    <h4 class="font-bold text-white text-lg truncate">${item.title}</h4>
                 </div>
-                <div class="${iconColor} bg-white/5 w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border border-white/5">
-                    <i class="fas ${iconClass} text-xl"></i>
-                </div>
+                <div class="${iconColor} bg-white/5 w-10 h-10 rounded-full flex items-center justify-center border border-white/5"><i class="fas fa-layer-group"></i></div>
             </div>
-            
-            <div class="flex gap-3 mt-1">
-                ${hasScript ? `
-                <button onclick="app.reader.open('${item.files.script}', '${item.title}', '${item.id}')" class="flex-1 bg-white/5 hover:bg-white/10 text-gray-200 py-3.5 rounded-xl text-base font-bold flex items-center justify-center gap-2 transition active:bg-white/20">
-                    <i class="fas fa-align-left text-gray-500"></i> <span class="hidden sm:inline">Lesen</span><span class="sm:hidden">Text</span>
-                </button>` : ''}
-                
-                ${hasAudio ? `
-                <button onclick="app.player.load('${item.files.audio}', '${item.title}', '${item.id}')" class="flex-1 bg-white/5 hover:bg-white/10 text-gray-200 py-3.5 rounded-xl text-base font-bold flex items-center justify-center gap-2 transition active:bg-white/20">
-                    <i class="fas fa-play text-gray-500"></i> Audio
-                </button>` : ''}
-
-                <a href="${ankiLink}" class="flex-1 bg-gray-700 text-white hover:bg-gray-600 py-3.5 rounded-xl text-base font-bold flex items-center justify-center gap-2 shadow-md transition active:scale-95">
-                    <i class="fas fa-star text-sm text-yellow-500"></i> Anki
-                </a>
+            <div class="flex gap-2 mt-1">
+                ${hasScript ? `<button onclick="app.reader.open('${item.files.script}', '${item.title}', '${item.id}')" class="flex-1 bg-white/5 py-2 rounded-xl text-sm font-medium">Lesen</button>` : ''}
+                ${hasAudio ? `<button onclick="app.player.load('${item.files.audio}', '${item.title}', '${item.id}')" class="flex-1 bg-white/5 py-2 rounded-xl text-sm font-medium">Hören</button>` : ''}
             </div>
-        </div>
-        `;
+        </div>`;
     },
 
     switchTab: (tabName) => {
-        document.getElementById('view-dashboard').classList.add('hidden');
-        document.getElementById('view-library').classList.add('hidden');
-        if(tabName !== 'reader') {
-             document.getElementById('view-reader').classList.add('hidden');
-             document.getElementById('view-' + tabName).classList.remove('hidden');
-             const titles = {'dashboard': 'Dashboard', 'library': 'Bibliothek'};
-             document.getElementById('page-title').innerText = titles[tabName];
-             if(tabName === 'library') UI.renderLibrary(app.data);
-             if(tabName === 'dashboard') UI.renderDashboard(app.data); 
+        const header = document.getElementById('main-header');
+        const scrollWrapper = document.getElementById('scroll-wrapper');
+        const viewForyou = document.getElementById('view-foryou');
+        
+        // Reset Nav Buttons
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('text-blue-500', 'active', 'text-white');
+            btn.classList.add('text-gray-500');
+        });
+        const activeBtn = document.querySelector(`button[onclick*="${tabName}"]`);
 
-             document.querySelectorAll('.nav-btn').forEach(btn => {
-                 btn.classList.remove('text-blue-500', 'active');
-                 btn.classList.add('text-gray-500');
-             });
-             const activeBtn = document.querySelector(`button[onclick*="${tabName}"]`);
-             if(activeBtn) {
-                 activeBtn.classList.remove('text-gray-500');
-                 activeBtn.classList.add('text-blue-500', 'active');
-             }
+        if (tabName === 'foryou') {
+            // Zeige ForYou, Verstecke Standard UI
+            if(scrollWrapper) scrollWrapper.classList.add('hidden');
+            if(viewForyou) viewForyou.classList.remove('hidden');
+            if(header) header.classList.add('-translate-y-full'); // Header weg
+            
+            if(activeBtn) { activeBtn.classList.remove('text-gray-500'); activeBtn.classList.add('text-white', 'active'); }
+
+            // Render/Start Videos
+            if(window.app && window.app.foryou) window.app.foryou.render(window.app.data);
+        
+        } else {
+            // Zeige Standard UI, Verstecke ForYou
+            if(viewForyou) viewForyou.classList.add('hidden');
+            if(scrollWrapper) scrollWrapper.classList.remove('hidden');
+            if(header) header.classList.remove('-translate-y-full'); // Header da
+            
+            // Pausiere Videos
+            if(window.app && window.app.foryou) window.app.foryou.pauseAll();
+
+            if(activeBtn) { activeBtn.classList.remove('text-gray-500'); activeBtn.classList.add('text-blue-500', 'active'); }
+
+            // Content umschalten
+            document.getElementById('view-dashboard').classList.add('hidden');
+            document.getElementById('view-library').classList.add('hidden');
+            
+            if (tabName === 'dashboard') {
+                document.getElementById('view-dashboard').classList.remove('hidden');
+                document.getElementById('page-title').innerText = 'Dashboard';
+            }
+            if (tabName === 'library') {
+                document.getElementById('view-library').classList.remove('hidden');
+                document.getElementById('page-title').innerText = 'Bibliothek';
+                UI.renderLibrary(app.data);
+            }
         }
     }
 };

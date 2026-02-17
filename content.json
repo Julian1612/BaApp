@@ -7,7 +7,8 @@
     "added": "2026-02-17T14:55:05.647Z",
     "files": {
       "script": "content/itm_grundlagen/scripts/E01.md",
-      "audio": "content/itm_grundlagen/audio/E01.m4a"
+      "audio": "content/itm_grundlagen/audio/E01.m4a",
+      "video": "content/itm_grundlagen/videos/E01.mp4"
     }
   },
   {
@@ -18,7 +19,8 @@
     "added": "2026-02-17T14:53:49.899Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E01.md",
-      "audio": "content/organisation_projekte/audio/E01.m4a"
+      "audio": "content/organisation_projekte/audio/E01.m4a",
+      "video": "content/organisation_projekte/videos/E01.mp4"
     }
   }
 ]

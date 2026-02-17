@@ -3,15 +3,17 @@ window.app = {
     ui: UI,
     player: Player,
     reader: Reader,
+    foryou: ForYou, // NEU HINZUGEFÜGT
     data: []
 };
 
 // Start
 document.addEventListener('DOMContentLoaded', async () => {
     Player.init();
+    ForYou.init(); // NEU HINZUGEFÜGT
     
     try {
-        // Cache-Busting für content.json, damit du immer neue Inhalte siehst
+        // Cache-Busting für content.json
         const res = await fetch('content.json?v=' + Date.now());
         window.app.data = await res.json();
         

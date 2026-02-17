@@ -2,11 +2,9 @@
 const fs = require('fs');
 const path = require('path');
 
-// Wir gehen vom 'scripts' Ordner einen Schritt hoch in 'content'
 const contentDir = path.join(__dirname, '../content');
 const outputFile = path.join(__dirname, '../content.json');
 
-// WICHTIG: Diese Keys müssen exakt so heissen wie deine Ordner!
 const subjects = {
     'itm_grundlagen': 'ITM Grundlagen',
     'organisation_projekte': 'Org. & Projekte'
@@ -22,12 +20,11 @@ if (!fs.existsSync(contentDir)) {
 }
 
 function scanDirectory(subjectKey, type) {
-    // Baut den Pfad: content/itm_grundlagen/scripts
     const targetDir = path.join(contentDir, subjectKey, type);
     
-    // Debug-Info
     if (!fs.existsSync(targetDir)) {
-        console.warn(`⚠️  Ordner nicht gefunden: ${targetDir}`);
+        // Videos sind optional, daher nur Warnung bei Scripts/Audio
+        if (type !== 'videos') console.warn(`⚠️  Ordner nicht gefunden: ${targetDir}`);
         return;
     }
 
@@ -35,44 +32,46 @@ function scanDirectory(subjectKey, type) {
     let count = 0;
 
     files.forEach(file => {
-        if (file.startsWith('.')) return; // Ignoriere .DS_Store
+        if (file.startsWith('.')) return;
         
-        // Prüfe Endung, um Müll-Dateien zu vermeiden
+        // Dateiendungen prüfen
         if (type === 'scripts' && !file.endsWith('.md')) return;
         if (type === 'audio' && !['.mp3', '.m4a', '.wav'].some(ext => file.endsWith(ext))) return;
+        if (type === 'videos' && !['.mp4', '.webm', '.mov'].some(ext => file.endsWith(ext))) return; // NEU
 
         const filePath = path.join('content', subjectKey, type, file);
-        const id = file.replace(/\.[^/.]+$/, ""); // "E01.md" -> "E01"
+        const id = file.replace(/\.[^/.]+$/, ""); 
         
         let entry = db.find(e => e.id === id && e.subjectKey === subjectKey);
         
         if (!entry) {
             entry = {
                 id: id,
-                title: id.replace(/_/g, ' '), // "E01_Titel" -> "E01 Titel"
+                title: id.replace(/_/g, ' '),
                 subject: subjects[subjectKey],
                 subjectKey: subjectKey,
-                // Wir nutzen mtime (Last Modified), damit Updates erkannt werden
                 added: fs.statSync(path.join(targetDir, file)).mtime,
                 files: {}
             };
             db.push(entry);
         }
         
+        // Zuweisung basierend auf Typ
         if (type === 'scripts') entry.files.script = filePath;
         if (type === 'audio') entry.files.audio = filePath;
+        if (type === 'videos') entry.files.video = filePath; // NEU
+        
         count++;
     });
     console.log(`✅ ${subjectKey}/${type}: ${count} Dateien gefunden.`);
 }
 
-// Scannen
 Object.keys(subjects).forEach(sub => {
     scanDirectory(sub, 'scripts');
     scanDirectory(sub, 'audio');
+    scanDirectory(sub, 'videos'); // NEU
 });
 
-// Sortieren: Neueste Episoden (E02) zuerst, älteste (E01) unten
 db.sort((a, b) => {
     if (a.id < b.id) return 1; 
     if (a.id > b.id) return -1;

@@ -59,3 +59,18 @@ body {
 .prose a { color: var(--accent-blue); }
 .prose blockquote { border-left: 4px solid var(--accent-blue); padding-left: 1rem; color: #98989d; background: #1c1c1e; padding: 0.5rem 1rem; border-radius: 0 8px 8px 0; }
 .prose code { color: #ff9f0a; background: #2c2c2e; padding: 2px 4px; border-radius: 4px; }
+
+/* src/css/styles.css */
+
+/* Snap Scrolling & Fullscreen Video */
+.snap-y { scroll-snap-type: y mandatory; }
+.snap-mandatory { scroll-snap-type: y mandatory; }
+.video-snap-item {
+    scroll-snap-align: start;
+    height: 100vh; /* Muss exakt Viewport-Höhe sein */
+    width: 100vw;
+    position: relative;
+    overflow: hidden;
+}
+/* Wichtig damit Videos nicht vom Header verdeckt werden im ForYou Modus */
+#view-foryou { top: 0; padding-top: 0; z-index: 50; background: black; }
