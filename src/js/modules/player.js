@@ -20,24 +20,24 @@ const Player = {
         if(btnBack) btnBack.onclick = () => Player.skip(-10);
         const btnFwd = document.getElementById('btn-skip-fwd');
         if(btnFwd) btnFwd.onclick = () => Player.skip(10);
-        const btnSpeed = document.getElementById('btn-speed');
-        if(btnSpeed) btnSpeed.onclick = Player.cycleSpeed;
-
+        
+        // Speed Button ist jetzt optional/versteckt im Minimal Design, 
+        // kann aber bei Bedarf wieder aktiviert werden.
+        
         Player.audio.ontimeupdate = Player.updateProgress;
         Player.audio.onended = () => Player.updateIcon(false);
     },
 
-    // NEU: Player schließen
     close: () => {
         Player.audio.pause();
         Player.updateIcon(false);
         const playerEl = document.getElementById('mini-player');
         
-        // Animation raus
-        playerEl.classList.add('translate-y-32');
+        // Slide Down Animation
+        playerEl.classList.add('translate-y-full'); 
         setTimeout(() => {
             playerEl.classList.add('hidden');
-        }, 500);
+        }, 300);
     },
 
     load: (url, title, id) => {
@@ -53,7 +53,6 @@ const Player = {
                     navigator.mediaSession.metadata = new MediaMetadata({
                         title: title,
                         artist: "Study App",
-                        album: "Semester 1",
                         artwork: [{ src: 'public/icons/icon-192.png', sizes: '192x192', type: 'image/png' }]
                     });
                     navigator.mediaSession.setActionHandler('play', Player.togglePlay);
@@ -67,12 +66,13 @@ const Player = {
         Player.updateIcon(true);
         Player.audio.playbackRate = Player.currentSpeed;
         
-        // Animation rein
+        // Slide Up Animation
         if(playerEl) {
             playerEl.classList.remove('hidden');
-            setTimeout(() => {
-                playerEl.classList.remove('translate-y-32');
-            }, 50);
+            // Kleiner Timeout damit der Browser den remove('hidden') registriert bevor er animiert
+            requestAnimationFrame(() => {
+                playerEl.classList.remove('translate-y-full');
+            });
         }
         
         if(id && typeof SpacedRepetition !== 'undefined') {
@@ -94,7 +94,7 @@ const Player = {
         if(!Player.btnPlay) return;
         const icon = Player.btnPlay.querySelector('i');
         if(icon) {
-            icon.className = isPlaying ? 'fas fa-pause text-sm' : 'fas fa-play text-sm';
+            icon.className = isPlaying ? 'fas fa-pause text-sm ml-0' : 'fas fa-play text-sm ml-0.5';
         }
     },
 
@@ -107,16 +107,12 @@ const Player = {
         const percent = (Player.audio.currentTime / Player.audio.duration) * 100;
         Player.progressBar.style.width = `${percent}%`;
     },
-
+    
     cycleSpeed: () => {
+        // Logik bleibt erhalten, auch wenn Button gerade ausgeblendet ist
         const speeds = [1.0, 1.25, 1.5, 2.0];
         let idx = speeds.indexOf(Player.currentSpeed);
         Player.currentSpeed = speeds[(idx + 1) % speeds.length];
         Player.audio.playbackRate = Player.currentSpeed;
-        
-        const btnSpeed = document.getElementById('btn-speed');
-        if(btnSpeed) {
-            btnSpeed.innerText = Player.currentSpeed + 'x';
-        }
     }
 };
