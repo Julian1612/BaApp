@@ -9,6 +9,13 @@
     --ios-red: #FF453A;
 }
 
+/* FIX: Verhindert jegliches horizontales Wackeln auf Mobilgeräten */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+    position: relative;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
     background-color: var(--bg-body);
@@ -16,7 +23,7 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Glassmorphismus */
+/* Glassmorphismus für den fixen Main-Header */
 .glass {
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(20px);
@@ -35,15 +42,29 @@ body {
 /* Gamification Styles */
 .gamification-hud { display: flex; align-items: center; gap: 12px; }
 .streak-container { 
-    display: flex; align-items: center; gap: 4px; 
-    background: rgba(255, 69, 58, 0.15); padding: 4px 10px; 
-    border-radius: 20px; border: 1px solid rgba(255, 69, 58, 0.3); 
+    display: flex; 
+    align-items: center; 
+    gap: 4px; 
+    background: rgba(255, 69, 58, 0.15); 
+    padding: 4px 10px; 
+    border-radius: 20px; 
+    border: 1px solid rgba(255, 69, 58, 0.3); 
 }
-.fire-anim { animation: flicker 1.5s infinite alternate; color: var(--ios-red); filter: drop-shadow(0 0 5px var(--ios-red)); }
+.fire-anim { 
+    animation: flicker 1.5s infinite alternate; 
+    color: var(--ios-red); 
+    filter: drop-shadow(0 0 5px var(--ios-red)); 
+}
 @keyframes flicker { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.1); opacity: 1; } }
 
 .xp-container { position: relative; width: 80px; height: 6px; background: #2c2c2e; border-radius: 3px; overflow: hidden; }
-.xp-fill { height: 100%; background: linear-gradient(90deg, #0a84ff, #5e5ce6); width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px rgba(10, 132, 255, 0.5); }
+.xp-fill { 
+    height: 100%; 
+    background: linear-gradient(90deg, #0a84ff, #5e5ce6); 
+    width: 0%; 
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); 
+    box-shadow: 0 0 10px rgba(10, 132, 255, 0.5); 
+}
 
 /* Confetti */
 #confetti-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
@@ -57,17 +78,36 @@ body {
 .prose h1, .prose h2, .prose h3 { color: #ffffff; }
 .prose strong { color: #ffffff; }
 .prose a { color: var(--accent-blue); }
-.prose blockquote { border-left: 4px solid var(--accent-blue); padding-left: 1rem; color: #98989d; background: #1c1c1e; padding: 0.5rem 1rem; border-radius: 0 8px 8px 0; }
+.prose blockquote { 
+    border-left: 4px solid var(--accent-blue); 
+    padding-left: 1rem; 
+    color: #98989d; 
+    background: #1c1c1e; 
+    padding: 0.5rem 1rem; 
+    border-radius: 0 8px 8px 0; 
+}
 .prose code { color: #ff9f0a; background: #2c2c2e; padding: 2px 4px; border-radius: 4px; }
 
-/* Snap Scrolling */
+/* Snap Scrolling & Fullscreen Video */
 .snap-y { scroll-snap-type: y mandatory; }
 .snap-mandatory { scroll-snap-type: y mandatory; }
-.video-snap-item { scroll-snap-align: start; height: 100vh; width: 100vw; position: relative; overflow: hidden; }
+.video-snap-item {
+    scroll-snap-align: start;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    overflow: hidden;
+}
 
 #view-foryou { top: 0; padding-top: 0; z-index: 50; background: black; }
 
-/* FIX: Bibliotheks-Header Maskierung */
+/* --- FIX FÜR BIBLIOTHEK HEADER & HORIZONTAL WIGGLE --- */
+
+#scroll-wrapper {
+    overflow-x: hidden; /* Verhindert das Swipen nach links/rechts */
+}
+
+/* Der klebrige Container im Bibliotheks-Tab */
 #view-library > div.sticky {
     background-color: #000 !important;
     z-index: 25 !important;
@@ -77,13 +117,14 @@ body {
     padding-bottom: 16px;
 }
 
+/* Repariertes Schild: Deckt alles ab, ohne die Breite zu sprengen */
 #view-library > div.sticky::before {
     content: "";
     position: absolute;
     bottom: 100%;
-    left: -50px;
-    right: -50px;
-    height: 200px; /* Deckt den Raum zum Dashboard-Header ab */
+    left: -20px; /* Reduziert auf Padding-Breite */
+    right: -20px;
+    height: 200px; 
     background-color: #000;
     pointer-events: none;
 }
