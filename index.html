@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
-<head>
+<html lang="de" class="dark"> <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Study App</title>
@@ -8,83 +7,79 @@
     <link rel="apple-touch-icon" href="public/icons/icon-192.png">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#f2f2f7">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="src/css/styles.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { gray: { 750: '#2c2c2e', 850: '#1c1c1e', 900: '#111111' } } } }
+        }
+    </script>
 </head>
-<body class="h-screen w-screen overflow-hidden flex flex-col text-gray-900 bg-[#f2f2f7]">
+<body class="h-screen w-screen overflow-hidden flex flex-col text-white bg-black selection:bg-blue-500 selection:text-white">
 
-    <header class="fixed top-0 w-full z-30 glass safe-top transition-transform duration-300" id="main-header">
+    <header class="fixed top-0 w-full z-30 glass safe-top transition-transform duration-300 border-b-0" id="main-header">
         <div class="px-5 py-3 flex justify-between items-center h-14">
-            <h1 id="page-title" class="text-xl font-bold tracking-tight">Dashboard</h1>
+            <h1 id="page-title" class="text-xl font-bold tracking-tight text-white">Dashboard</h1>
             <div id="header-actions"></div> 
         </div>
     </header>
 
     <main id="app-container" class="flex-1 overflow-y-auto overflow-x-hidden pt-28 pb-32 px-4 no-scrollbar w-full">
-        
         <div id="view-dashboard" class="view-section max-w-xl mx-auto"></div>
-        
         <div id="view-library" class="view-section hidden max-w-xl mx-auto"></div>
         
-        <div id="view-reader" class="view-section hidden fixed inset-0 z-40 bg-white overflow-y-auto no-scrollbar">
-            </div>
+        <div id="view-reader" class="view-section hidden fixed inset-0 z-40 bg-[#000000] overflow-y-auto no-scrollbar"></div>
     </main>
 
-    <div id="selection-tooltip" class="hidden fixed z-50 bg-gray-900 text-white rounded-full px-4 py-2 shadow-xl flex gap-4 items-center transform -translate-x-1/2 left-1/2 bottom-24 transition-all">
+    <div id="selection-tooltip" class="hidden fixed z-50 bg-gray-800 text-white border border-gray-700 rounded-full px-4 py-2 shadow-xl flex gap-4 items-center transform -translate-x-1/2 left-1/2 bottom-24 transition-all">
         <button onclick="app.reader.saveHighlight()" class="font-medium text-sm flex items-center gap-2">
             <i class="fas fa-highlighter text-yellow-400"></i> Notiz speichern
         </button>
     </div>
 
-    <div id="mini-player" class="hidden fixed bottom-20 left-4 right-4 z-40 bg-white/95 backdrop-blur-xl shadow-2xl rounded-2xl p-4 border border-white/20 transform transition-all duration-500 translate-y-32">
+    <div id="mini-player" class="hidden fixed bottom-20 left-4 right-4 z-40 bg-[#1c1c1e]/95 backdrop-blur-xl shadow-2xl rounded-2xl p-4 border border-white/10 transform transition-all duration-500 translate-y-32">
+        
+        <button onclick="app.player.close()" class="absolute -top-2 -right-2 bg-gray-700 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-lg border border-black text-xs z-50">
+            <i class="fas fa-times"></i>
+        </button>
+
         <div class="flex items-center justify-between gap-3">
             <div class="flex-1 min-w-0">
-                <p id="player-title" class="text-sm font-semibold truncate text-gray-900">Lade...</p>
-                <p class="text-xs text-gray-500">Podcast</p>
+                <p id="player-title" class="text-sm font-semibold truncate text-white">Lade...</p>
+                <p class="text-xs text-gray-400">Podcast</p>
             </div>
             
             <div class="flex items-center gap-3">
-                <button id="btn-speed" class="text-xs font-bold text-gray-500 w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 transition">1.0x</button>
-                
-                <button id="btn-skip-back" class="text-gray-400 hover:text-blue-500 transition w-8 h-8 flex items-center justify-center">
-                    <i class="fas fa-undo-alt text-sm"></i>
-                </button>
-                
-                <button id="btn-play-pause" class="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center shadow-lg active:scale-95 transition">
-                    <i class="fas fa-play text-lg"></i>
-                </button>
-                
-                <button id="btn-skip-fwd" class="text-gray-400 hover:text-blue-500 transition w-8 h-8 flex items-center justify-center">
-                    <i class="fas fa-redo-alt text-sm"></i>
-                </button>
+                <button id="btn-speed" class="text-xs font-bold text-gray-400 w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-700 transition">1.0x</button>
+                <button id="btn-skip-back" class="text-gray-400 hover:text-white transition w-8 h-8 flex items-center justify-center"><i class="fas fa-undo-alt text-sm"></i></button>
+                <button id="btn-play-pause" class="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center shadow-lg active:scale-95 transition"><i class="fas fa-play text-lg"></i></button>
+                <button id="btn-skip-fwd" class="text-gray-400 hover:text-white transition w-8 h-8 flex items-center justify-center"><i class="fas fa-redo-alt text-sm"></i></button>
             </div>
         </div>
-        
-        <div class="h-1 bg-gray-100 mt-4 rounded-full overflow-hidden w-full">
-            <div id="progress-bar" class="h-full bg-blue-600 w-0 transition-all duration-100"></div>
+        <div class="h-1 bg-gray-700 mt-4 rounded-full overflow-hidden w-full">
+            <div id="progress-bar" class="h-full bg-blue-500 w-0 transition-all duration-100"></div>
         </div>
-        
         <audio id="audio-element" class="hidden"></audio>
     </div>
 
-    <nav class="fixed bottom-0 w-full z-50 glass safe-bottom border-t border-gray-200">
+    <nav class="fixed bottom-0 w-full z-50 glass safe-bottom border-t border-white/10">
         <div class="flex justify-around items-center h-16 max-w-xl mx-auto">
-            <button onclick="app.ui.switchTab('dashboard')" class="nav-btn active flex-1 flex flex-col items-center justify-center gap-1 text-blue-600 transition">
-                <i class="fas fa-bolt text-lg"></i>
-                <span class="text-[10px] font-medium">Fokus</span>
+            <button onclick="app.ui.switchTab('dashboard')" class="nav-btn active flex-1 flex flex-col items-center justify-center gap-1 text-blue-500 transition">
+                <i class="fas fa-bolt text-lg"></i><span class="text-[10px] font-medium">Fokus</span>
             </button>
-            <button onclick="app.ui.switchTab('library')" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-gray-400 transition">
-                <i class="fas fa-layer-group text-lg"></i>
-                <span class="text-[10px] font-medium">Bibliothek</span>
+            <button onclick="app.ui.switchTab('library')" class="nav-btn flex-1 flex flex-col items-center justify-center gap-1 text-gray-500 transition">
+                <i class="fas fa-layer-group text-lg"></i><span class="text-[10px] font-medium">Bibliothek</span>
             </button>
         </div>
     </nav>
-
+    
     <script src="src/js/modules/spaced-repetition.js"></script>
     <script src="src/js/modules/player.js"></script>
     <script src="src/js/modules/reader.js"></script>

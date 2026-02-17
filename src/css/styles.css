@@ -1,46 +1,45 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-    --ios-gray: #f2f2f7;
-    --ios-blue: #007aff;
+    /* Dark Mode Palette (Apple Style) */
+    --bg-body: #000000;
+    --bg-card: #1c1c1e;
+    --bg-card-secondary: #2c2c2e;
+    --text-primary: #ffffff;
+    --text-secondary: #8e8e93;
+    --accent-blue: #0a84ff;
+    --border-color: #38383a;
 }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
-    background-color: var(--ios-gray);
-    -webkit-tap-highlight-color: transparent; /* Entfernt grauen Klick-Hintergrund auf iOS */
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* iOS Safe Areas */
-.safe-top { padding-top: max(env(safe-area-inset-top), 20px); }
-.safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 20px); }
-.pb-safe { padding-bottom: calc(env(safe-area-inset-bottom) + 80px); } /* Platz für Player/Nav */
-
-/* Glassmorphismus für Header & Player */
+/* Glassmorphismus Dark */
 .glass {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(28, 28, 30, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-/* Reader Typography */
-.prose { max-width: 100%; color: #1c1c1e; }
-.prose h1 { font-size: 1.8rem; letter-spacing: -0.02em; margin-bottom: 0.5em; }
-.prose h2 { font-size: 1.4rem; margin-top: 1.5em; color: #000; }
-.prose p { margin-bottom: 1.2em; line-height: 1.6; font-size: 1.05rem; }
-.prose blockquote { border-left: 4px solid var(--ios-blue); padding-left: 1rem; color: #666; font-style: italic; }
+.safe-top { padding-top: max(env(safe-area-inset-top), 20px); }
+.safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 20px); }
 
-/* Custom Scrollbar verstecken für sauberen Look */
+/* Reader Dark Mode Styles */
+.prose { color: #d1d1d6; }
+.prose h1, .prose h2, .prose h3 { color: #ffffff; }
+.prose strong { color: #ffffff; }
+.prose a { color: var(--accent-blue); }
+.prose blockquote { border-left-color: var(--accent-blue); color: #98989d; background: #1c1c1e; padding: 0.5rem 1rem; border-radius: 0 8px 8px 0; }
+.prose code { color: #ff9f0a; background: #2c2c2e; padding: 2px 4px; border-radius: 4px; }
+
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Floating Selection Tooltip (für Notizen) */
-#selection-tooltip {
-    animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes popIn {
-    from { transform: scale(0.9) translateY(10px); opacity: 0; }
-    to { transform: scale(1) translateY(0); opacity: 1; }
-}
+/* Animationen */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }

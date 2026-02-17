@@ -12,26 +12,32 @@ const Player = {
             document.body.appendChild(audio);
         }
         Player.audio = audio;
-        
         Player.btnPlay = document.getElementById('btn-play-pause');
         Player.progressBar = document.getElementById('progress-bar');
         
-        // Buttons verbinden
         if(Player.btnPlay) Player.btnPlay.onclick = Player.togglePlay;
-        
         const btnBack = document.getElementById('btn-skip-back');
         if(btnBack) btnBack.onclick = () => Player.skip(-10);
-        
         const btnFwd = document.getElementById('btn-skip-fwd');
         if(btnFwd) btnFwd.onclick = () => Player.skip(10);
-        
-        // Speed Button wiederhergestellt
         const btnSpeed = document.getElementById('btn-speed');
         if(btnSpeed) btnSpeed.onclick = Player.cycleSpeed;
 
-        // Events
         Player.audio.ontimeupdate = Player.updateProgress;
         Player.audio.onended = () => Player.updateIcon(false);
+    },
+
+    // NEU: Player schließen
+    close: () => {
+        Player.audio.pause();
+        Player.updateIcon(false);
+        const playerEl = document.getElementById('mini-player');
+        
+        // Animation raus
+        playerEl.classList.add('translate-y-32');
+        setTimeout(() => {
+            playerEl.classList.add('hidden');
+        }, 500);
     },
 
     load: (url, title, id) => {
@@ -43,17 +49,13 @@ const Player = {
         Player.audio.src = url;
         Player.audio.play()
             .then(() => {
-                // Media Session API (iOS Lockscreen Support)
                 if ('mediaSession' in navigator) {
                     navigator.mediaSession.metadata = new MediaMetadata({
                         title: title,
                         artist: "Study App",
                         album: "Semester 1",
-                        artwork: [
-                            { src: 'public/icons/icon-192.png', sizes: '192x192', type: 'image/png' }
-                        ]
+                        artwork: [{ src: 'public/icons/icon-192.png', sizes: '192x192', type: 'image/png' }]
                     });
-
                     navigator.mediaSession.setActionHandler('play', Player.togglePlay);
                     navigator.mediaSession.setActionHandler('pause', Player.togglePlay);
                     navigator.mediaSession.setActionHandler('seekbackward', () => Player.skip(-10));
@@ -63,11 +65,9 @@ const Player = {
             .catch(e => console.error("Playback failed:", e));
 
         Player.updateIcon(true);
-        
-        // Speed Reset oder Beibehalten? Wir behalten ihn bei.
         Player.audio.playbackRate = Player.currentSpeed;
         
-        // Animation
+        // Animation rein
         if(playerEl) {
             playerEl.classList.remove('hidden');
             setTimeout(() => {
@@ -117,9 +117,6 @@ const Player = {
         const btnSpeed = document.getElementById('btn-speed');
         if(btnSpeed) {
             btnSpeed.innerText = Player.currentSpeed + 'x';
-            // Kleines visuelles Feedback
-            btnSpeed.classList.add('bg-blue-100', 'text-blue-600');
-            setTimeout(() => btnSpeed.classList.remove('bg-blue-100', 'text-blue-600'), 200);
         }
     }
 };

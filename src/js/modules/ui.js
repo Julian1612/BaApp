@@ -1,31 +1,55 @@
 const UI = {
-    // Zustand für den Bibliotheks-Filter (Standard: ITM)
     libraryState: 'itm_grundlagen',
 
-    renderDashboard: (content) => {
+    renderDashboard: async (content) => {
         const container = document.getElementById('view-dashboard');
         const suggestions = SpacedRepetition.getSuggestions(content);
-        
-        // Begrüßung nach Tageszeit
         const hour = new Date().getHours();
         const greeting = hour < 12 ? "Guten Morgen" : hour < 18 ? "Guten Tag" : "Guten Abend";
 
+        // 1. Daily Nugget laden
+        let nuggetHtml = '';
+        try {
+            const nugget = await UI.getDailyNugget(content);
+            if(nugget) {
+                nuggetHtml = `
+                <div class="mb-6 bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 p-5 rounded-3xl shadow-lg relative overflow-hidden group">
+                     <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
+                        <i class="fas fa-lightbulb text-6xl text-yellow-500"></i>
+                     </div>
+                     <div class="relative z-10">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded">Wissen des Tages</span>
+                            <span class="text-[10px] text-gray-400">${nugget.sourceTitle}</span>
+                        </div>
+                        <p class="text-gray-200 text-lg font-medium leading-relaxed italic">"${nugget.text}"</p>
+                        <button onclick="app.reader.open('${nugget.sourceUrl}', '${nugget.sourceTitle}', '${nugget.sourceId}')" class="mt-4 text-sm text-blue-400 font-medium hover:text-blue-300 transition flex items-center gap-1">
+                            Ganzes Skript lesen <i class="fas fa-arrow-right text-xs"></i>
+                        </button>
+                     </div>
+                </div>`;
+            }
+        } catch(e) { console.error(e); }
+
+        // Dashboard HTML zusammenbauen
         let html = `
         <div class="mb-6 animate-fade-in">
-            <h2 class="text-3xl font-bold text-gray-900">${greeting}</h2>
-            <p class="text-gray-500">Dein Fokus für diese Woche.</p>
+            <h2 class="text-3xl font-bold text-white mb-1">${greeting}</h2>
+            <p class="text-gray-400">Lerne heute etwas Neues.</p>
         </div>
         
+        ${nuggetHtml}
+        
+        <h3 class="font-bold text-gray-300 mb-3 px-1 text-sm uppercase tracking-wider">Fokus der Woche</h3>
         <div class="space-y-4">`;
         
         suggestions.forEach(item => html += UI.createCard(item, true));
         
         if (suggestions.length === 0) {
             html += `
-            <div class="bg-white p-8 rounded-3xl text-center shadow-sm border border-gray-100">
+            <div class="bg-gray-800 p-8 rounded-3xl text-center border border-gray-700">
                 <i class="fas fa-check-circle text-4xl text-green-500 mb-3"></i>
-                <p class="font-medium text-gray-900">Alles erledigt!</p>
-                <p class="text-sm text-gray-500">Du bist auf dem aktuellen Stand.</p>
+                <p class="font-medium text-white">Alles erledigt!</p>
             </div>`;
         }
         
@@ -33,19 +57,70 @@ const UI = {
         container.innerHTML = html;
     },
 
+    // Die Logik für den zufälligen Happen
+    getDailyNugget: async (content) => {
+        const today = new Date().toDateString();
+        const stored = JSON.parse(localStorage.getItem('dailyNugget'));
+
+        // Wenn wir heute schon einen haben, nimm den (damit er nicht bei Reload wechselt)
+        if (stored && stored.date === today) return stored;
+
+        // Sonst: Neuen generieren
+        const scriptItems = content.filter(c => c.files && c.files.script);
+        if (scriptItems.length === 0) return null;
+
+        // 1. Zufälliges Skript wählen
+        const randomItem = scriptItems[Math.floor(Math.random() * scriptItems.length)];
+        
+        try {
+            // Skript fetchen
+            const res = await fetch(randomItem.files.script);
+            const text = await res.text();
+            
+            // 2. Einen zufälligen Paragraphen extrahieren
+            // Splitte bei Leerzeilen, filtere Überschriften (#) und kurze Zeilen raus
+            const paragraphs = text.split(/\n\n+/).filter(p => 
+                !p.trim().startsWith('#') && 
+                !p.trim().startsWith('![') && // Keine Bilder
+                p.trim().length > 60 && // Mindestlänge
+                p.trim().length < 400   // Maximallänge
+            );
+
+            if(paragraphs.length === 0) return null;
+
+            const randomPara = paragraphs[Math.floor(Math.random() * paragraphs.length)];
+            
+            // Markdown Syntax grob entfernen (Fett/Kursiv)
+            const cleanText = randomPara.replace(/[\*\_\[\]]/g, '');
+
+            const newNugget = {
+                date: today,
+                text: cleanText,
+                sourceTitle: randomItem.title,
+                sourceId: randomItem.id,
+                sourceUrl: randomItem.files.script
+            };
+
+            localStorage.setItem('dailyNugget', JSON.stringify(newNugget));
+            return newNugget;
+
+        } catch(e) {
+            console.error("Nugget Error", e);
+            return null;
+        }
+    },
+
     renderLibrary: (content) => {
         const container = document.getElementById('view-library');
+        const activeClass = "bg-gray-700 text-white shadow-sm font-semibold";
+        const inactiveClass = "text-gray-400 hover:text-white font-medium hover:bg-white/5";
         
-        // Styles für die Tabs (Aktiv vs Inaktiv)
-        const activeClass = "bg-white text-gray-900 shadow-sm font-semibold ring-1 ring-black/5";
-        const inactiveClass = "text-gray-500 hover:text-gray-700 font-medium hover:bg-black/5";
-        
-        // Filterlogik
         const isITM = UI.libraryState === 'itm_grundlagen';
         const filteredContent = content.filter(c => c.subjectKey === UI.libraryState);
 
         let html = `
-        <div class="sticky top-0 z-20 pb-4 bg-[#f2f2f7]"> <div class="bg-gray-200/80 p-1 rounded-xl flex text-sm relative backdrop-blur-md">
+        <div class="sticky top-0 z-20 pb-4 bg-black"> 
+            <div class="bg-[#1c1c1e] p-1 rounded-xl flex text-sm border border-white/10">
                 <button onclick="app.ui.setLibraryFilter('itm_grundlagen')" 
                     class="flex-1 py-1.5 rounded-lg transition-all duration-200 ${isITM ? activeClass : inactiveClass}">
                     ITM Grundlagen
@@ -56,85 +131,68 @@ const UI = {
                 </button>
             </div>
         </div>
-        
         <div class="space-y-4 pb-24 animate-fade-in">
         `;
         
         if (filteredContent.length === 0) {
-            html += `
-            <div class="flex flex-col items-center justify-center py-12 text-gray-400">
-                <i class="fas fa-folder-open text-4xl mb-3 text-gray-300"></i>
-                <p>Noch keine Inhalte in diesem Fach.</p>
-            </div>`;
+            html += `<div class="text-center py-12 text-gray-500"><p>Leer.</p></div>`;
         } else {
-            // Header für den Bereich
-            const title = isITM ? 'ITM Grundlagen' : 'Organisation & Projekte';
+            const title = isITM ? 'ITM Grundlagen' : 'Org & Projekte';
             const color = isITM ? 'bg-blue-500' : 'bg-purple-500';
             
             html += `
             <div class="flex items-center gap-2 mb-2 px-1">
                 <span class="w-1 h-5 ${color} rounded-full"></span>
-                <h3 class="font-bold text-gray-900 text-xl">${title}</h3>
-                <span class="text-xs text-gray-400 font-medium ml-auto bg-gray-100 px-2 py-1 rounded-full">${filteredContent.length} Einheiten</span>
+                <h3 class="font-bold text-white text-xl">${title}</h3>
+                <span class="text-xs text-gray-500 font-medium ml-auto border border-gray-700 px-2 py-1 rounded-full">${filteredContent.length}</span>
             </div>
             `;
-
-            // Karten rendern
-            filteredContent.forEach(item => {
-                html += UI.createCard(item);
-            });
+            filteredContent.forEach(item => html += UI.createCard(item));
         }
-
         html += '</div>';
         container.innerHTML = html;
     },
 
     setLibraryFilter: (filter) => {
         UI.libraryState = filter;
-        // Wir greifen auf die globalen Daten zu, um neu zu rendern
-        if(app && app.data) {
-            UI.renderLibrary(app.data);
-        }
+        if(app && app.data) UI.renderLibrary(app.data);
     },
 
     createCard: (item, isHighlight = false) => {
         const hasAudio = !!item.files.audio;
         const hasScript = !!item.files.script;
-        
-        // Farben basierend auf Fach
-        const iconColor = item.subjectKey === 'itm_grundlagen' ? 'text-blue-500' : 'text-purple-500';
+        const iconColor = item.subjectKey === 'itm_grundlagen' ? 'text-blue-400' : 'text-purple-400';
         const iconClass = item.subjectKey === 'itm_grundlagen' ? 'fa-network-wired' : 'fa-project-diagram';
-        const bgColor = isHighlight ? 'bg-white shadow-lg ring-1 ring-blue-100' : 'bg-white shadow-sm';
+        const bgColor = isHighlight ? 'bg-gray-800 border-gray-600 shadow-lg' : 'bg-[#1c1c1e] border-white/5';
 
-        // Anki Integration Links
         const ankiLink = `anki://`; 
         const ankiWebLink = `https://ankiweb.net/decks`;
 
         return `
-        <div class="${bgColor} p-4 rounded-2xl flex flex-col gap-3 transition active:scale-[0.98] duration-200 border border-gray-100/50">
+        <div class="${bgColor} p-4 rounded-2xl flex flex-col gap-3 transition active:scale-[0.98] duration-200 border">
             <div class="flex justify-between items-start">
                 <div class="overflow-hidden pr-2">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1 block">${item.id}</span>
-                    <h4 class="font-bold text-gray-900 leading-tight text-lg truncate">${item.title}</h4>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1 block">${item.id}</span>
+                    <h4 class="font-bold text-white leading-tight text-lg truncate">${item.title}</h4>
                 </div>
-                <div class="${iconColor} bg-gray-50 w-10 h-10 rounded-full flex items-center justify-center shrink-0">
+                <div class="${iconColor} bg-white/5 w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-white/5">
                     <i class="fas ${iconClass} text-lg"></i>
                 </div>
             </div>
             
             <div class="flex gap-2 mt-1">
                 ${hasScript ? `
-                <button onclick="app.reader.open('${item.files.script}', '${item.title}', '${item.id}')" class="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition group">
-                    <i class="fas fa-align-left text-gray-400 group-hover:text-gray-600"></i> <span class="hidden sm:inline">Lesen</span>
+                <button onclick="app.reader.open('${item.files.script}', '${item.title}', '${item.id}')" class="flex-1 bg-white/5 hover:bg-white/10 text-gray-300 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition">
+                    <i class="fas fa-align-left text-gray-500"></i> <span class="hidden sm:inline">Lesen</span>
                 </button>` : ''}
                 
                 ${hasAudio ? `
-                <button onclick="app.player.load('${item.files.audio}', '${item.title}', '${item.id}')" class="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition group">
-                    <i class="fas fa-play text-gray-400 group-hover:text-gray-600"></i> <span class="hidden sm:inline">Hören</span>
+                <button onclick="app.player.load('${item.files.audio}', '${item.title}', '${item.id}')" class="flex-1 bg-white/5 hover:bg-white/10 text-gray-300 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition">
+                    <i class="fas fa-play text-gray-500"></i> <span class="hidden sm:inline">Hören</span>
                 </button>` : ''}
 
-                <a href="${ankiLink}" onclick="var start=Date.now(); setTimeout(() => { if(Date.now()-start < 2000 && !document.hidden) window.open('${ankiWebLink}', '_blank'); }, 500);" class="flex-1 bg-gray-900 text-white hover:bg-gray-800 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-md shadow-gray-200 active:scale-95 transition">
-                    <i class="fas fa-star text-xs text-yellow-400"></i> Anki
+                <a href="${ankiLink}" onclick="var start=Date.now(); setTimeout(() => { if(Date.now()-start < 2000 && !document.hidden) window.open('${ankiWebLink}', '_blank'); }, 500);" class="flex-1 bg-gray-700 text-white hover:bg-gray-600 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-md transition">
+                    <i class="fas fa-star text-xs text-yellow-500"></i> Anki
                 </a>
             </div>
         </div>
@@ -142,34 +200,24 @@ const UI = {
     },
 
     switchTab: (tabName) => {
-        // Tab-Wechsel Logik
         document.getElementById('view-dashboard').classList.add('hidden');
         document.getElementById('view-library').classList.add('hidden');
-        
-        // Reader ist special (Overlay)
         if(tabName !== 'reader') {
              document.getElementById('view-reader').classList.add('hidden');
-             const view = document.getElementById('view-' + tabName);
-             view.classList.remove('hidden');
-             
-             // Titel ändern
+             document.getElementById('view-' + tabName).classList.remove('hidden');
              const titles = {'dashboard': 'Dashboard', 'library': 'Bibliothek'};
              document.getElementById('page-title').innerText = titles[tabName];
-             
-             // Wenn wir zur Library wechseln, sicherstellen dass sie gerendert ist (mit Filter)
-             if(tabName === 'library') {
-                 UI.renderLibrary(app.data);
-             }
+             if(tabName === 'library') UI.renderLibrary(app.data);
+             if(tabName === 'dashboard') UI.renderDashboard(app.data); // Neu laden für neuen Nugget check
 
-             // Navigation Active State
              document.querySelectorAll('.nav-btn').forEach(btn => {
-                 btn.classList.remove('text-blue-600', 'active');
-                 btn.classList.add('text-gray-400');
+                 btn.classList.remove('text-blue-500', 'active');
+                 btn.classList.add('text-gray-500');
              });
              const activeBtn = document.querySelector(`button[onclick*="${tabName}"]`);
              if(activeBtn) {
-                 activeBtn.classList.remove('text-gray-400');
-                 activeBtn.classList.add('text-blue-600', 'active');
+                 activeBtn.classList.remove('text-gray-500');
+                 activeBtn.classList.add('text-blue-500', 'active');
              }
         }
     }
