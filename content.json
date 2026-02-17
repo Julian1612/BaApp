@@ -1,5 +1,165 @@
 [
   {
+    "id": "E03 copy 9",
+    "title": "E03 copy 9",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:39.902Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 9.md"
+    }
+  },
+  {
+    "id": "E03 copy 8",
+    "title": "E03 copy 8",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:35.188Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 8.md"
+    }
+  },
+  {
+    "id": "E03 copy 7",
+    "title": "E03 copy 7",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:34.498Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 7.md"
+    }
+  },
+  {
+    "id": "E03 copy 6",
+    "title": "E03 copy 6",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:33.620Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 6.md"
+    }
+  },
+  {
+    "id": "E03 copy 5",
+    "title": "E03 copy 5",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:33.045Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 5.md"
+    }
+  },
+  {
+    "id": "E03 copy 4",
+    "title": "E03 copy 4",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:32.199Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 4.md"
+    }
+  },
+  {
+    "id": "E03 copy 3",
+    "title": "E03 copy 3",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:31.667Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 3.md"
+    }
+  },
+  {
+    "id": "E03 copy 2",
+    "title": "E03 copy 2",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:31.082Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 2.md"
+    }
+  },
+  {
+    "id": "E03 copy 16",
+    "title": "E03 copy 16",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:43.873Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 16.md"
+    }
+  },
+  {
+    "id": "E03 copy 15",
+    "title": "E03 copy 15",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:43.323Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 15.md"
+    }
+  },
+  {
+    "id": "E03 copy 14",
+    "title": "E03 copy 14",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:42.551Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 14.md"
+    }
+  },
+  {
+    "id": "E03 copy 13",
+    "title": "E03 copy 13",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:41.903Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 13.md"
+    }
+  },
+  {
+    "id": "E03 copy 12",
+    "title": "E03 copy 12",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:41.421Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 12.md"
+    }
+  },
+  {
+    "id": "E03 copy 11",
+    "title": "E03 copy 11",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:40.770Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 11.md"
+    }
+  },
+  {
+    "id": "E03 copy 10",
+    "title": "E03 copy 10",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:40.229Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy 10.md"
+    }
+  },
+  {
+    "id": "E03 copy",
+    "title": "E03 copy",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:42:30.179Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03 copy.md"
+    }
+  },
+  {
     "id": "E03",
     "title": "E03",
     "subject": "ITM Grundlagen",
