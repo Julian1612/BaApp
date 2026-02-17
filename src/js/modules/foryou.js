@@ -1,24 +1,19 @@
 const ForYou = {
     activeVideo: null,
     observer: null,
-    currentSpeed: 1.0, // Speichert die Geschwindigkeit global für alle Videos
+    currentSpeed: 1.0,
 
     init: () => {
         const view = document.getElementById('view-foryou');
         if (!view) return;
 
-        // Infinite Scroll Loop
         view.addEventListener('scroll', () => {
             if (view.scrollTop + view.clientHeight >= view.scrollHeight - 2) {
                 view.scrollTo({ top: 0, behavior: 'instant' });
             }
         });
 
-        const options = {
-            root: view,
-            rootMargin: '0px',
-            threshold: 0.6
-        };
+        const options = { root: view, rootMargin: '0px', threshold: 0.6 };
 
         if ('IntersectionObserver' in window) {
             ForYou.observer = new IntersectionObserver(ForYou.handleIntersection, options);
@@ -52,13 +47,12 @@ const ForYou = {
                     loop 
                     playsinline 
                     preload="metadata"
-                    onclick="ForYou.togglePlay(this)">
+                    onclick="ForYou.handleTap(event, this)">
                 </video>
                 
                 <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent pointer-events-none"></div>
                 
                 <div class="absolute right-4 bottom-24 flex flex-col items-center gap-5 z-20">
-                    
                     <button onclick="event.stopPropagation(); ForYou.changeSpeed(this)" class="btn-speed flex flex-col items-center gap-1 group active:scale-90 transition">
                         <div class="w-12 h-12 bg-gray-800/80 backdrop-blur text-white rounded-full flex items-center justify-center shadow-lg border border-white/10">
                             <span class="text-xs font-bold speed-label">${ForYou.currentSpeed}x</span>
@@ -107,16 +101,61 @@ const ForYou = {
         }
     },
 
+    // NEU: Verwaltet Klicks (Links/Mitte/Rechts)
+    handleTap: (event, videoEl) => {
+        const rect = videoEl.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const width = rect.width;
+        const percentage = x / width;
+
+        // Linke 30% -> Zurückspulen
+        if (percentage < 0.30) {
+            videoEl.currentTime = Math.max(0, videoEl.currentTime - 10);
+            ForYou.showSkipFeedback(videoEl.parentElement, 'back');
+        } 
+        // Rechte 30% -> Vorspulen
+        else if (percentage > 0.70) {
+            videoEl.currentTime = Math.min(videoEl.duration, videoEl.currentTime + 10);
+            ForYou.showSkipFeedback(videoEl.parentElement, 'fwd');
+        } 
+        // Mitte -> Play/Pause
+        else {
+            ForYou.togglePlay(videoEl);
+        }
+    },
+
+    // NEU: Zeigt kurzes visuelles Feedback (-10s / +10s)
+    showSkipFeedback: (container, type) => {
+        // Altes Feedback entfernen falls vorhanden
+        const existing = container.querySelector('.skip-feedback');
+        if(existing) existing.remove();
+
+        const el = document.createElement('div');
+        // Positionierung links oder rechts
+        const positionClass = type === 'back' ? 'left-1/4' : 'right-1/4';
+        
+        el.className = `skip-feedback absolute top-1/2 ${positionClass} -translate-y-1/2 z-30 bg-black/70 backdrop-blur-md w-20 h-20 rounded-full flex flex-col items-center justify-center text-white animate-fade-in pointer-events-none border border-white/10`;
+        
+        el.innerHTML = type === 'back' 
+            ? '<i class="fas fa-undo text-2xl mb-1"></i><span class="text-xs font-bold">-10s</span>'
+            : '<i class="fas fa-redo text-2xl mb-1"></i><span class="text-xs font-bold">+10s</span>';
+        
+        container.appendChild(el);
+
+        // Nach kurzer Zeit ausblenden und entfernen
+        setTimeout(() => {
+            el.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+            setTimeout(() => el.remove(), 300);
+        }, 500);
+    },
+
     handleIntersection: (entries) => {
         entries.forEach(entry => {
             const video = entry.target.querySelector('video');
             if (!video) return;
 
             if (entry.isIntersecting) {
-                // Setze gespeicherte Geschwindigkeit
                 video.playbackRate = ForYou.currentSpeed;
-                
-                // Aktualisiere das Label des Buttons auf diesem Slide (falls nötig)
                 const speedLabel = entry.target.querySelector('.speed-label');
                 if(speedLabel) speedLabel.innerText = ForYou.currentSpeed + 'x';
 
@@ -130,22 +169,17 @@ const ForYou = {
     },
 
     changeSpeed: (btnElement) => {
-        // Zyklus: 1.0 -> 1.25 -> 1.5 -> 2.0 -> 1.0
         const speeds = [1.0, 1.25, 1.5, 2.0];
         let idx = speeds.indexOf(ForYou.currentSpeed);
         ForYou.currentSpeed = speeds[(idx + 1) % speeds.length];
 
-        // 1. Geschwindigkeit am aktiven Video ändern
         if (ForYou.activeVideo) {
             ForYou.activeVideo.playbackRate = ForYou.currentSpeed;
         }
 
-        // 2. Button Text aktualisieren
         const label = btnElement.querySelector('.speed-label');
         if (label) {
             label.innerText = ForYou.currentSpeed + 'x';
-            
-            // Kleines visuelles Feedback
             label.parentElement.classList.add('bg-blue-600');
             setTimeout(() => label.parentElement.classList.remove('bg-blue-600'), 200);
         }
