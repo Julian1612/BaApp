@@ -1,3 +1,4 @@
+/* src/js/modules/foryou.js */
 const ForYou = {
     activeVideo: null,
     observer: null,
@@ -32,24 +33,24 @@ const ForYou = {
             return;
         }
 
-        // Shuffle
         const shuffled = videos.sort(() => 0.5 - Math.random());
         let html = '';
 
         shuffled.forEach(item => {
             html += `
-            <div class="video-snap-item relative w-full h-full flex items-center justify-center bg-black border-b border-gray-800 shrink-0 snap-center">
+            <div class="video-snap-item relative w-full h-full flex items-center justify-center bg-black border-b border-gray-800 shrink-0">
                 <video 
                     src="${item.files.video}" 
-                    class="h-full w-full object-cover" 
+                    class="h-full w-full object-contain bg-black" 
                     loop 
                     playsinline 
                     preload="metadata"
                     onclick="ForYou.togglePlay(this)">
                 </video>
-                <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80 pointer-events-none"></div>
                 
-                <div class="absolute right-4 bottom-28 flex flex-col items-center gap-6 z-20">
+                <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent pointer-events-none"></div>
+                
+                <div class="absolute right-4 bottom-24 flex flex-col items-center gap-6 z-20">
                     ${item.files.script ? `
                     <button onclick="event.stopPropagation(); app.reader.open('${item.files.script}', '${item.title}', '${item.id}')" class="flex flex-col items-center gap-1 group active:scale-90 transition">
                         <div class="w-12 h-12 bg-gray-800/80 backdrop-blur text-white rounded-full flex items-center justify-center shadow-lg group-hover:bg-blue-600 transition">
@@ -69,25 +70,26 @@ const ForYou = {
 
                 <div class="absolute left-4 bottom-24 right-20 z-10 text-white pointer-events-none">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="bg-white/20 backdrop-blur px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide">
+                        <span class="bg-blue-600/80 backdrop-blur px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide shadow-sm">
                             ${item.subjectKey === 'itm_grundlagen' ? 'ITM' : 'ORG'}
                         </span>
-                        <h3 class="font-bold text-lg leading-snug drop-shadow-md">${item.title}</h3>
+                        <h3 class="font-bold text-lg leading-snug drop-shadow-md shadow-black">${item.title}</h3>
                     </div>
-                    <p class="text-xs text-gray-300 opacity-80">
-                        Tippe zum Starten/Pausieren.
+                    <p class="text-xs text-gray-300 opacity-90 drop-shadow-md line-clamp-2">
+                        Tippe auf das Video zum Starten/Pausieren.
                     </p>
                 </div>
 
                 <div class="play-icon absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300">
-                    <i class="fas fa-play text-6xl text-white/50"></i>
+                    <div class="bg-black/50 p-6 rounded-full backdrop-blur-sm">
+                        <i class="fas fa-play text-4xl text-white"></i>
+                    </div>
                 </div>
             </div>`;
         });
 
         container.innerHTML = html;
 
-        // Observer aktivieren
         if (ForYou.observer) {
             container.querySelectorAll('.video-snap-item').forEach(el => ForYou.observer.observe(el));
         }
@@ -101,8 +103,8 @@ const ForYou = {
             if (entry.isIntersecting) {
                 const playPromise = video.play();
                 if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        console.log("Autoplay verhindert, User-Interaktion nötig.");
+                    playPromise.catch(() => {
+                        console.log("Autoplay blockiert (User-Interaktion nötig).");
                     });
                 }
                 ForYou.activeVideo = video;
