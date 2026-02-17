@@ -1,5 +1,15 @@
 [
   {
+    "id": "E03",
+    "title": "E03",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T17:33:02.961Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E03.md"
+    }
+  },
+  {
     "id": "E02",
     "title": "E02",
     "subject": "ITM Grundlagen",
