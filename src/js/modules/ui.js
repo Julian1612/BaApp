@@ -107,7 +107,6 @@ const UI = {
         const bgColor = isHighlight ? 'bg-white shadow-lg ring-1 ring-blue-100' : 'bg-white shadow-sm';
 
         // Anki Integration Links
-        // Versucht App zu öffnen, Fallback auf Web
         const ankiLink = `anki://`; 
         const ankiWebLink = `https://ankiweb.net/decks`;
 
@@ -134,7 +133,7 @@ const UI = {
                     <i class="fas fa-play text-gray-400 group-hover:text-gray-600"></i> <span class="hidden sm:inline">Hören</span>
                 </button>` : ''}
 
-                <a href="${ankiLink}" onclick="setTimeout(() => { window.location.href = '${ankiWebLink}'; }, 500);" class="flex-1 bg-gray-900 text-white hover:bg-gray-800 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-md shadow-gray-200 active:scale-95 transition">
+                <a href="${ankiLink}" onclick="var start=Date.now(); setTimeout(() => { if(Date.now()-start < 2000 && !document.hidden) window.open('${ankiWebLink}', '_blank'); }, 500);" class="flex-1 bg-gray-900 text-white hover:bg-gray-800 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-md shadow-gray-200 active:scale-95 transition">
                     <i class="fas fa-star text-xs text-yellow-400"></i> Anki
                 </a>
             </div>
