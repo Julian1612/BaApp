@@ -39,6 +39,19 @@ body {
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+/* Header & Action Buttons */
+#header-actions button {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#header-actions i {
+    font-size: 1.2rem;
+}
+
 /* Gamification Styles */
 .gamification-hud { display: flex; align-items: center; gap: 12px; }
 .streak-container { 
@@ -46,7 +59,7 @@ body {
     align-items: center; 
     gap: 4px; 
     background: rgba(255, 69, 58, 0.15); 
-    padding: 4px 10px; 
+    padding: 6px 12px; 
     border-radius: 20px; 
     border: 1px solid rgba(255, 69, 58, 0.3); 
 }
@@ -57,7 +70,7 @@ body {
 }
 @keyframes flicker { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.1); opacity: 1; } }
 
-.xp-container { position: relative; width: 80px; height: 6px; background: #2c2c2e; border-radius: 3px; overflow: hidden; }
+.xp-container { position: relative; width: 100px; height: 8px; background: #2c2c2e; border-radius: 4px; overflow: hidden; }
 .xp-fill { 
     height: 100%; 
     background: linear-gradient(90deg, #0a84ff, #5e5ce6); 
@@ -74,19 +87,49 @@ body {
 .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
 
 /* Reader Styles */
-.prose { color: #d1d1d6; }
-.prose h1, .prose h2, .prose h3 { color: #ffffff; }
+.prose { color: #d1d1d6; font-size: 1.1rem; line-height: 1.6; }
+.prose h1, .prose h2, .prose h3 { color: #ffffff; margin-top: 1.5em; }
 .prose strong { color: #ffffff; }
 .prose a { color: var(--accent-blue); }
 .prose blockquote { 
     border-left: 4px solid var(--accent-blue); 
-    padding-left: 1rem; 
+    padding: 0.75rem 1rem; 
     color: #98989d; 
     background: #1c1c1e; 
-    padding: 0.5rem 1rem; 
     border-radius: 0 8px 8px 0; 
+    margin: 1.5rem 0;
 }
-.prose code { color: #ff9f0a; background: #2c2c2e; padding: 2px 4px; border-radius: 4px; }
+.prose code { color: #ff9f0a; background: #2c2c2e; padding: 2px 6px; border-radius: 4px; }
+
+/* Player UI Optimization */
+#mini-player button {
+    min-width: 44px;
+    min-height: 44px;
+}
+#btn-play-pause {
+    width: 56px !important;
+    height: 56px !important;
+}
+#btn-play-pause i { font-size: 1.25rem; }
+
+/* Navigations-Bar */
+.nav-btn {
+    padding: 10px 0;
+}
+.nav-btn i {
+    font-size: 1.6rem !important;
+}
+.nav-btn span {
+    font-size: 11px !important;
+    font-weight: 600;
+}
+
+/* Tooltip */
+#selection-tooltip {
+    padding: 14px 28px;
+    bottom: 110px;
+    border-radius: 30px;
+}
 
 /* Snap Scrolling & Fullscreen Video */
 .snap-y { scroll-snap-type: y mandatory; }
@@ -101,13 +144,10 @@ body {
 
 #view-foryou { top: 0; padding-top: 0; z-index: 50; background: black; }
 
-/* --- FIX FÜR BIBLIOTHEK HEADER & HORIZONTAL WIGGLE --- */
-
 #scroll-wrapper {
-    overflow-x: hidden; /* Verhindert das Swipen nach links/rechts */
+    overflow-x: hidden;
 }
 
-/* Der klebrige Container im Bibliotheks-Tab */
 #view-library > div.sticky {
     background-color: #000 !important;
     z-index: 25 !important;
@@ -117,12 +157,11 @@ body {
     padding-bottom: 16px;
 }
 
-/* Repariertes Schild: Deckt alles ab, ohne die Breite zu sprengen */
 #view-library > div.sticky::before {
     content: "";
     position: absolute;
     bottom: 100%;
-    left: -20px; /* Reduziert auf Padding-Breite */
+    left: -20px;
     right: -20px;
     height: 200px; 
     background-color: #000;

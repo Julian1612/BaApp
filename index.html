@@ -28,12 +28,12 @@
     <canvas id="confetti-canvas"></canvas>
 
     <header class="fixed top-0 w-full z-30 glass safe-top transition-transform duration-300 border-b-0" id="main-header">
-        <div class="px-5 py-3 flex justify-between items-center h-14">
-            <h1 id="page-title" class="text-xl font-bold tracking-tight text-white">Dashboard</h1>
+        <div class="px-5 py-3 flex justify-between items-center h-16">
+            <h1 id="page-title" class="text-2xl font-bold tracking-tight text-white">Dashboard</h1>
             
-            <div id="header-actions" class="flex items-center gap-3">
-                <button onclick="window.location.reload()" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-white transition active:rotate-180 duration-500">
-                    <i class="fas fa-arrows-rotate text-sm"></i>
+            <div id="header-actions" class="flex items-center gap-2">
+                <button onclick="window.location.reload()" class="text-gray-500 active:text-white transition active:rotate-180 duration-500">
+                    <i class="fas fa-arrows-rotate"></i>
                 </button>
             </div> 
         </div>
@@ -41,61 +41,61 @@
 
     <main id="app-container" class="flex-1 overflow-hidden pt-0 pb-0 px-0 w-full h-full relative">
         
-        <div id="scroll-wrapper" class="pt-28 pb-64 px-4 h-full overflow-y-auto no-scrollbar">
+        <div id="scroll-wrapper" class="pt-32 pb-64 px-4 h-full overflow-y-auto no-scrollbar">
             <div id="view-dashboard" class="view-section max-w-xl mx-auto"></div>
             <div id="view-library" class="view-section hidden max-w-xl mx-auto"></div>
         </div>
 
         <div id="view-foryou" class="view-section hidden fixed inset-0 z-20 bg-black h-screen w-screen overflow-y-scroll snap-y snap-mandatory no-scrollbar pb-16">
-            </div>
+        </div>
 
         <div id="view-reader" class="view-section hidden fixed inset-0 z-50 bg-[#000000] overflow-y-auto no-scrollbar"></div>
     </main>
 
-    <div id="selection-tooltip" class="hidden fixed z-[60] bg-gray-800 text-white border border-gray-700 rounded-full px-4 py-2 shadow-xl flex gap-4 items-center transform -translate-x-1/2 left-1/2 bottom-32 transition-all">
-        <button onclick="app.reader.saveHighlight()" class="font-medium text-sm flex items-center gap-2">
+    <div id="selection-tooltip" class="hidden fixed z-[60] bg-gray-800 text-white border border-gray-700 shadow-xl flex gap-5 items-center transform -translate-x-1/2 left-1/2 transition-all">
+        <button onclick="app.reader.saveHighlight()" class="font-bold text-base flex items-center gap-3">
             <i class="fas fa-highlighter text-yellow-400"></i> Notiz speichern
         </button>
     </div>
 
     <div id="mini-player" class="hidden fixed left-0 right-0 z-40 bg-[#1c1c1e] border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.6)] transform transition-transform duration-300 translate-y-full" style="bottom: calc(4rem + env(safe-area-inset-bottom));">
         
-        <div class="max-w-xl mx-auto px-4 py-2 h-16 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+        <div class="max-w-xl mx-auto px-4 py-2 h-20 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
             
             <div class="min-w-0 flex flex-col justify-center pr-2">
-                <p id="player-title" class="text-xs font-bold truncate text-white leading-tight mb-0.5">Lade...</p>
+                <p id="player-title" class="text-sm font-bold truncate text-white leading-tight mb-0.5">Lade...</p>
                 <div class="flex items-center gap-1.5 opacity-60">
-                    <i class="fas fa-podcast text-[10px]"></i>
-                    <span class="text-[10px] truncate">Podcast</span>
+                    <i class="fas fa-podcast text-[11px]"></i>
+                    <span class="text-[11px] truncate uppercase tracking-wider font-bold">Podcast</span>
                 </div>
             </div>
 
-            <div class="flex items-center justify-center gap-6">
-                 <button id="btn-skip-back" class="text-gray-400 hover:text-white transition active:scale-90 p-2">
-                    <i class="fas fa-undo-alt text-sm"></i>
+            <div class="flex items-center justify-center gap-8">
+                 <button id="btn-skip-back" class="text-gray-400 active:text-white p-2">
+                    <i class="fas fa-undo-alt text-lg"></i>
                  </button>
                  
-                 <button id="btn-play-pause" class="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition shadow-lg shadow-white/10">
-                    <i class="fas fa-play text-sm ml-0.5"></i>
+                 <button id="btn-play-pause" class="bg-white text-black rounded-full flex items-center justify-center active:scale-90 transition shadow-lg">
+                    <i class="fas fa-play ml-1"></i>
                  </button>
                  
-                 <button id="btn-skip-fwd" class="text-gray-400 hover:text-white transition active:scale-90 p-2">
-                    <i class="fas fa-redo-alt text-sm"></i>
+                 <button id="btn-skip-fwd" class="text-gray-400 active:text-white p-2">
+                    <i class="fas fa-redo-alt text-lg"></i>
                  </button>
             </div>
 
-            <div class="flex justify-end items-center">
-                 <button id="btn-speed" class="text-xs font-bold text-gray-300 mr-4 px-2 py-1 rounded hover:bg-white/10 transition">
+            <div class="flex justify-end items-center gap-2">
+                 <button id="btn-speed" class="text-sm font-bold text-gray-300 px-3 py-2 rounded-lg hover:bg-white/10">
                     1.0x
                  </button>
 
-                 <button onclick="app.player.close()" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/10 transition active:scale-90">
-                    <i class="fas fa-times text-base"></i>
+                 <button onclick="app.player.close()" class="w-10 h-10 flex items-center justify-center text-gray-500 active:text-white">
+                    <i class="fas fa-times text-xl"></i>
                  </button>
             </div>
         </div>
 
-        <div class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-800">
+        <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-gray-800">
              <div id="progress-bar" class="h-full bg-blue-500 w-0 transition-all duration-100"></div>
         </div>
         
@@ -103,23 +103,23 @@
     </div>
 
     <nav class="fixed bottom-0 w-full z-50 bg-[#000000]/90 backdrop-blur-xl border-t border-white/10 safe-bottom">
-        <div class="flex justify-around items-center h-16 max-w-xl mx-auto">
-            <button onclick="app.ui.switchTab('dashboard')" class="nav-btn active flex-1 h-full flex flex-col items-center justify-center gap-1.5 text-blue-500 transition">
-                <i class="fas fa-bolt text-xl"></i>
-                <span class="text-[10px] font-semibold tracking-wide">Fokus</span>
+        <div class="flex justify-around items-center h-20 max-w-xl mx-auto">
+            <button onclick="app.ui.switchTab('dashboard')" class="nav-btn active flex-1 h-full flex flex-col items-center justify-center gap-1 text-blue-500">
+                <i class="fas fa-bolt"></i>
+                <span>Fokus</span>
             </button>
             
-            <button onclick="app.ui.switchTab('foryou')" class="nav-btn flex-1 h-full flex flex-col items-center justify-center gap-1.5 text-gray-500 transition">
+            <button onclick="app.ui.switchTab('foryou')" class="nav-btn flex-1 h-full flex flex-col items-center justify-center gap-1 text-gray-500">
                 <div class="relative">
-                    <i class="fas fa-play-circle text-2xl transform scale-110"></i>
-                    <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                    <i class="fas fa-play-circle transform scale-110"></i>
+                    <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
                 </div>
-                <span class="text-[10px] font-semibold tracking-wide">4 You</span>
+                <span>4 You</span>
             </button>
 
-            <button onclick="app.ui.switchTab('library')" class="nav-btn flex-1 h-full flex flex-col items-center justify-center gap-1.5 text-gray-500 transition">
-                <i class="fas fa-layer-group text-xl"></i>
-                <span class="text-[10px] font-semibold tracking-wide">Bibliothek</span>
+            <button onclick="app.ui.switchTab('library')" class="nav-btn flex-1 h-full flex flex-col items-center justify-center gap-1 text-gray-500">
+                <i class="fas fa-layer-group"></i>
+                <span>Bibliothek</span>
             </button>
         </div>
     </nav>
