@@ -16,18 +16,16 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Glassmorphismus */
+/* Glassmorphismus für den fixen Main-Header */
 .glass {
-    background: rgba(28, 28, 30, 0.85);
+    background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-/* Safe Areas - WICHTIG FÜR NAV */
+/* Safe Areas */
 .safe-top { padding-top: max(env(safe-area-inset-top), 20px); }
-
-/* safe-bottom fügt nur Padding hinzu, keine fixe Höhe! */
 .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
 
 /* Scrollbar verstecken */
@@ -36,12 +34,30 @@ body {
 
 /* Gamification Styles */
 .gamification-hud { display: flex; align-items: center; gap: 12px; }
-.streak-container { display: flex; align-items: center; gap: 4px; background: rgba(255, 69, 58, 0.15); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(255, 69, 58, 0.3); }
-.fire-anim { animation: flicker 1.5s infinite alternate; color: var(--ios-red); filter: drop-shadow(0 0 5px var(--ios-red)); }
+.streak-container { 
+    display: flex; 
+    align-items: center; 
+    gap: 4px; 
+    background: rgba(255, 69, 58, 0.15); 
+    padding: 4px 10px; 
+    border-radius: 20px; 
+    border: 1px solid rgba(255, 69, 58, 0.3); 
+}
+.fire-anim { 
+    animation: flicker 1.5s infinite alternate; 
+    color: var(--ios-red); 
+    filter: drop-shadow(0 0 5px var(--ios-red)); 
+}
 @keyframes flicker { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.1); opacity: 1; } }
 
 .xp-container { position: relative; width: 80px; height: 6px; background: #2c2c2e; border-radius: 3px; overflow: hidden; }
-.xp-fill { height: 100%; background: linear-gradient(90deg, #0a84ff, #5e5ce6); width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px rgba(10, 132, 255, 0.5); }
+.xp-fill { 
+    height: 100%; 
+    background: linear-gradient(90deg, #0a84ff, #5e5ce6); 
+    width: 0%; 
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); 
+    box-shadow: 0 0 10px rgba(10, 132, 255, 0.5); 
+}
 
 /* Confetti */
 #confetti-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
@@ -49,36 +65,59 @@ body {
 /* Animationen */
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
-@keyframes popInReward { 0% { transform: scale(0.5); opacity: 0; } 50% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
-.animate-reward { animation: popInReward 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
 /* Reader Styles */
 .prose { color: #d1d1d6; }
 .prose h1, .prose h2, .prose h3 { color: #ffffff; }
 .prose strong { color: #ffffff; }
 .prose a { color: var(--accent-blue); }
-.prose blockquote { border-left: 4px solid var(--accent-blue); padding-left: 1rem; color: #98989d; background: #1c1c1e; padding: 0.5rem 1rem; border-radius: 0 8px 8px 0; }
+.prose blockquote { 
+    border-left: 4px solid var(--accent-blue); 
+    padding-left: 1rem; 
+    color: #98989d; 
+    background: #1c1c1e; 
+    padding: 0.5rem 1rem; 
+    border-radius: 0 8px 8px 0; 
+}
 .prose code { color: #ff9f0a; background: #2c2c2e; padding: 2px 4px; border-radius: 4px; }
-
-/* src/css/styles.css */
 
 /* Snap Scrolling & Fullscreen Video */
 .snap-y { scroll-snap-type: y mandatory; }
 .snap-mandatory { scroll-snap-type: y mandatory; }
 .video-snap-item {
     scroll-snap-align: start;
-    height: 100vh; /* Muss exakt Viewport-Höhe sein */
+    height: 100vh;
     width: 100vw;
     position: relative;
     overflow: hidden;
 }
-/* Wichtig damit Videos nicht vom Header verdeckt werden im ForYou Modus */
+
 #view-foryou { top: 0; padding-top: 0; z-index: 50; background: black; }
 
-.header-container {
-  position: sticky;
-  top: 0;
-  z-index: 100; /* Stellt sicher, dass der Header über dem Inhalt bleibt */
-  background-color: #1a1a1a; /* Nutze die exakte Hintergrundfarbe deiner App */
-  padding-bottom: 10px; /* Optional: Kleiner Abstand zum Inhalt */
+/* --- FIX FÜR BIBLIOTHEK HEADER --- */
+
+/* Der klebrige Container im Bibliotheks-Tab */
+#view-library > div.sticky {
+    background-color: #000 !important;
+    z-index: 25 !important; /* Muss unter dem Haupt-Header (z-30) aber über den Karten liegen */
+    position: sticky;
+    top: 0;
+}
+
+/* Diese Pseudo-Element dient als "Schild" nach oben */
+#view-library > div.sticky::before {
+    content: "";
+    position: absolute;
+    bottom: 100%; /* Startet direkt an der Oberkante des Switches */
+    left: -50px; /* Großzügige Breite zur Sicherheit */
+    right: -50px;
+    height: 150px; /* Deckt den gesamten Bereich des pt-28 vom scroll-wrapper ab */
+    background-color: #000;
+    pointer-events: none; /* Klicks gehen durch den Schild hindurch */
+}
+
+/* Kleiner UI-Feinschliff: Trennlinie unter dem Switch */
+#view-library > div.sticky {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 16px;
 }
