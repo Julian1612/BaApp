@@ -3,11 +3,11 @@
   "short_name": "Study",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "background_color": "#f2f2f7",
+  "theme_color": "#f2f2f7",
   "icons": [
     {
-      "src": "icons/icon-192.png",
+      "src": "public/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     }

@@ -1,4 +1,5 @@
-const app = {
+// WICHTIG: window.app statt const app, damit es global verfügbar ist!
+window.app = {
     ui: UI,
     player: Player,
     reader: Reader,
@@ -10,19 +11,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     Player.init();
     
     try {
-        // Lade die content.json, die vom Build-Skript erstellt wurde
-        const res = await fetch('content.json');
-        app.data = await res.json();
+        // Cache-Busting für content.json, damit du immer neue Inhalte siehst
+        const res = await fetch('content.json?v=' + Date.now());
+        window.app.data = await res.json();
         
-        UI.renderDashboard(app.data);
-        UI.renderLibrary(app.data);
+        UI.renderDashboard(window.app.data);
+        UI.renderLibrary(window.app.data);
         
     } catch (e) {
-        console.error("Konnte Inhalt nicht laden. Hast du 'npm run build' ausgeführt?", e);
+        console.error("Konnte Inhalt nicht laden.", e);
         document.getElementById('view-dashboard').innerHTML = `
-            <div class="p-4 text-center">
-                <p class="text-red-500 font-bold">Keine Inhalte gefunden.</p>
-                <p class="text-sm text-gray-600 mt-2">Bitte lade Dateien in den content Ordner und führe das Build-Skript aus.</p>
+            <div class="p-8 text-center">
+                <i class="fas fa-exclamation-triangle text-4xl text-yellow-500 mb-4"></i>
+                <p class="font-bold text-gray-900">Inhalt konnte nicht geladen werden.</p>
+                <p class="text-sm text-gray-500 mt-2">Prüfe, ob 'content.json' existiert.</p>
             </div>
         `;
     }
