@@ -4,6 +4,11 @@ const Player = {
     btnSpeed: null,
     progressBar: null,
     currentSpeed: 1.0,
+    
+    // Variablen für Gesten-Steuerung
+    lastTapTime: 0,
+    longPressTimer: null,
+    isLongPressing: false,
 
     init: () => {
         let audio = document.getElementById('audio-element');
@@ -28,6 +33,81 @@ const Player = {
         
         Player.audio.ontimeupdate = Player.updateProgress;
         Player.audio.onended = () => Player.updateIcon(false);
+
+        // Gesten initialisieren
+        Player.setupGestures();
+    },
+
+    // Neue Funktion für Touch-Gesten
+    setupGestures: () => {
+        const touchZone = document.body;
+
+        touchZone.addEventListener('touchstart', (e) => {
+            // Ignoriere Klicks auf Buttons, Inputs oder Links
+            if(e.target.closest('button, a, input, textarea, .no-gestures')) return;
+
+            const touchX = e.touches[0].clientX;
+            const width = window.innerWidth;
+            const isLeft = touchX < width / 2;
+
+            // Logik: Links gedrückt halten für 2x Speed
+            if (isLeft) {
+                Player.longPressTimer = setTimeout(() => {
+                    Player.isLongPressing = true;
+                    Player.audio.playbackRate = 2.0;
+                    // Optional: Hier könnte man ein visuelles Feedback einblenden
+                }, 500); // Nach 500ms gedrückt halten aktivieren
+            }
+        }, { passive: true });
+
+        touchZone.addEventListener('touchend', (e) => {
+            // Timer stoppen, falls Finger vor 500ms gehoben wird
+            clearTimeout(Player.longPressTimer);
+
+            // Ignoriere Klicks auf Buttons
+            if(e.target.closest('button, a, input, textarea, .no-gestures')) return;
+
+            // Wenn Longpress aktiv war: Zurücksetzen und abbrechen
+            if (Player.isLongPressing) {
+                Player.isLongPressing = false;
+                Player.audio.playbackRate = Player.currentSpeed; // Zurück zur eingestellten Speed
+                return; 
+            }
+
+            // Doppel-Tap Logik
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - Player.lastTapTime;
+            const touchX = e.changedTouches[0].clientX;
+            const width = window.innerWidth;
+
+            if (tapLength < 300 && tapLength > 0) {
+                // Doppel-Tap erkannt
+                if (touchX < width / 2) {
+                    Player.skip(-10); // Links: Zurück
+                    Player.showGestureFeedback('back');
+                } else {
+                    Player.skip(10);  // Rechts: Vor
+                    Player.showGestureFeedback('forward');
+                }
+                // Verhindert Standard-Zoom bei Doppel-Tap
+                e.preventDefault(); 
+            }
+            Player.lastTapTime = currentTime;
+        });
+    },
+
+    // Kleines visuelles Feedback (optional, aber gut für UX)
+    showGestureFeedback: (type) => {
+        // Erstellt kurz ein Overlay Icon
+        const iconClass = type === 'back' ? 'fa-undo-alt' : 'fa-redo-alt';
+        const sideClass = type === 'back' ? 'left-10' : 'right-10';
+        
+        const el = document.createElement('div');
+        el.className = `fixed top-1/2 ${sideClass} transform -translate-y-1/2 z-[100] bg-black/70 text-white w-20 h-20 rounded-full flex items-center justify-center backdrop-blur-md animate-ping`;
+        el.innerHTML = `<i class="fas ${iconClass} text-3xl"></i><span class="absolute text-xs font-bold mt-8">10s</span>`;
+        
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 500);
     },
 
     close: () => {
@@ -94,7 +174,6 @@ const Player = {
         }
     },
 
-    // Hier angepasst für größere Icons (text-2xl statt text-sm)
     updateIcon: (isPlaying) => {
         if(!Player.btnPlay) return;
         const icon = Player.btnPlay.querySelector('i');
