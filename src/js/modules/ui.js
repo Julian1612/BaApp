@@ -1,3 +1,4 @@
+/* src/js/modules/ui.js */
 const UI = {
     libraryState: 'itm_grundlagen',
 
@@ -29,10 +30,6 @@ const UI = {
         } catch(e) { console.error(e); }
 
         let html = `
-        <div class="mb-6 animate-fade-in">
-            <h2 class="text-3xl font-bold text-white mb-1">${greeting}</h2>
-            <p class="text-gray-400">Lerne heute etwas Neues.</p>
-        </div>
         ${nuggetHtml}
         <h3 class="font-bold text-gray-300 mb-3 px-1 text-sm uppercase tracking-wider">Fokus der Woche</h3>
         <div class="space-y-4">`;
@@ -54,17 +51,14 @@ const UI = {
         const today = new Date().toDateString();
         const stored = JSON.parse(localStorage.getItem('dailyNugget'));
         if (stored && stored.date === today) return stored;
-        
         const scriptItems = content.filter(c => c.files && c.files.script);
         if (scriptItems.length === 0) return null;
-        
         const randomItem = scriptItems[Math.floor(Math.random() * scriptItems.length)];
         try {
             const res = await fetch(randomItem.files.script);
             const text = await res.text();
             const paragraphs = text.split(/\n\n+/).filter(p => !p.trim().startsWith('#') && p.trim().length > 60);
             if(paragraphs.length === 0) return null;
-            
             const newNugget = {
                 date: today,
                 text: paragraphs[Math.floor(Math.random() * paragraphs.length)].replace(/[\*\_\[\]]/g, ''),
@@ -113,18 +107,25 @@ const UI = {
         const iconColor = item.subjectKey === 'itm_grundlagen' ? 'text-blue-400' : 'text-purple-400';
         const bgColor = isHighlight ? 'bg-gray-800 border-gray-600 shadow-lg' : 'bg-[#1c1c1e] border-white/5';
         
+        // Link für den App-Switch zu Anki
+        const ankiLink = "anki://";
+
         return `
         <div class="${bgColor} p-4 rounded-2xl flex flex-col gap-3 transition active:scale-[0.98] duration-200 border">
             <div class="flex justify-between items-start">
-                <div>
+                <div class="overflow-hidden pr-2">
                     <span class="text-[10px] font-bold uppercase text-gray-500">${item.id}</span>
                     <h4 class="font-bold text-white text-lg truncate">${item.title}</h4>
                 </div>
                 <div class="${iconColor} bg-white/5 w-10 h-10 rounded-full flex items-center justify-center border border-white/5"><i class="fas fa-layer-group"></i></div>
             </div>
             <div class="flex gap-2 mt-1">
-                ${hasScript ? `<button onclick="app.reader.open('${item.files.script}', '${item.title}', '${item.id}')" class="flex-1 bg-white/5 py-2 rounded-xl text-sm font-medium">Lesen</button>` : ''}
-                ${hasAudio ? `<button onclick="app.player.load('${item.files.audio}', '${item.title}', '${item.id}')" class="flex-1 bg-white/5 py-2 rounded-xl text-sm font-medium">Hören</button>` : ''}
+                ${hasScript ? `<button onclick="app.reader.open('${item.files.script}', '${item.title}', '${item.id}')" class="flex-1 bg-white/5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2">Lesen</button>` : ''}
+                ${hasAudio ? `<button onclick="app.player.load('${item.files.audio}', '${item.title}', '${item.id}')" class="flex-1 bg-white/5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2">Hören</button>` : ''}
+                
+                <a href="${ankiLink}" class="flex-1 bg-gray-700 text-white py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-md transition active:bg-gray-600">
+                    <i class="fas fa-star text-xs text-yellow-500"></i> Anki
+                </a>
             </div>
         </div>`;
     },
@@ -134,48 +135,42 @@ const UI = {
         const scrollWrapper = document.getElementById('scroll-wrapper');
         const viewForyou = document.getElementById('view-foryou');
         
-        // Reset Nav Buttons
+        if(document.getElementById('view-dashboard')) document.getElementById('view-dashboard').classList.add('hidden');
+        if(document.getElementById('view-library')) document.getElementById('view-library').classList.add('hidden');
+        if(viewForyou) viewForyou.classList.add('hidden');
+
+        if (tabName === 'foryou') {
+            if(scrollWrapper) scrollWrapper.classList.add('hidden');
+            if(viewForyou) viewForyou.classList.remove('hidden');
+            if(header) header.classList.add('-translate-y-full');
+            if(window.app && window.app.foryou) window.app.foryou.render(window.app.data);
+        } else {
+            if(viewForyou) viewForyou.classList.add('hidden');
+            if(scrollWrapper) scrollWrapper.classList.remove('hidden');
+            if(header) header.classList.remove('-translate-y-full');
+            if(window.app && window.app.foryou) window.app.foryou.pauseAll();
+
+            if (tabName === 'dashboard') {
+                document.getElementById('view-dashboard').classList.remove('hidden');
+                UI.renderDashboard(app.data);
+                document.getElementById('page-title').innerText = 'Dashboard';
+            }
+            if (tabName === 'library') {
+                document.getElementById('view-library').classList.remove('hidden');
+                UI.renderLibrary(app.data);
+                document.getElementById('page-title').innerText = 'Bibliothek';
+            }
+        }
+
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.classList.remove('text-blue-500', 'active', 'text-white');
             btn.classList.add('text-gray-500');
         });
         const activeBtn = document.querySelector(`button[onclick*="${tabName}"]`);
-
-        if (tabName === 'foryou') {
-            // Zeige ForYou, Verstecke Standard UI
-            if(scrollWrapper) scrollWrapper.classList.add('hidden');
-            if(viewForyou) viewForyou.classList.remove('hidden');
-            if(header) header.classList.add('-translate-y-full'); // Header weg
-            
-            if(activeBtn) { activeBtn.classList.remove('text-gray-500'); activeBtn.classList.add('text-white', 'active'); }
-
-            // Render/Start Videos
-            if(window.app && window.app.foryou) window.app.foryou.render(window.app.data);
-        
-        } else {
-            // Zeige Standard UI, Verstecke ForYou
-            if(viewForyou) viewForyou.classList.add('hidden');
-            if(scrollWrapper) scrollWrapper.classList.remove('hidden');
-            if(header) header.classList.remove('-translate-y-full'); // Header da
-            
-            // Pausiere Videos
-            if(window.app && window.app.foryou) window.app.foryou.pauseAll();
-
-            if(activeBtn) { activeBtn.classList.remove('text-gray-500'); activeBtn.classList.add('text-blue-500', 'active'); }
-
-            // Content umschalten
-            document.getElementById('view-dashboard').classList.add('hidden');
-            document.getElementById('view-library').classList.add('hidden');
-            
-            if (tabName === 'dashboard') {
-                document.getElementById('view-dashboard').classList.remove('hidden');
-                document.getElementById('page-title').innerText = 'Dashboard';
-            }
-            if (tabName === 'library') {
-                document.getElementById('view-library').classList.remove('hidden');
-                document.getElementById('page-title').innerText = 'Bibliothek';
-                UI.renderLibrary(app.data);
-            }
+        if(activeBtn) {
+            activeBtn.classList.remove('text-gray-500');
+            if(tabName === 'foryou') activeBtn.classList.add('text-white', 'active');
+            else activeBtn.classList.add('text-blue-500', 'active');
         }
     }
 };
