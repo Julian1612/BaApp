@@ -8,7 +8,6 @@ const Reader = {
         // UI Setup
         const readerView = document.getElementById('view-reader');
         readerView.innerHTML = `
-            // Sticky Header im Reader (Dunkel)
             <div class="sticky top-0 z-50 bg-[#1c1c1e]/90 backdrop-blur-md safe-top px-4 py-3 flex justify-between items-center border-b border-white/10">
                  <h2 class="text-sm font-bold truncate pr-4 text-white w-3/4">${title}</h2>
                  <button onclick="app.reader.close()" class="bg-gray-800 text-gray-400 hover:text-white w-8 h-8 rounded-full flex items-center justify-center transition">

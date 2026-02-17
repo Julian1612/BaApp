@@ -7,7 +7,7 @@ const UI = {
         const hour = new Date().getHours();
         const greeting = hour < 12 ? "Guten Morgen" : hour < 18 ? "Guten Tag" : "Guten Abend";
 
-        // 1. Daily Nugget laden
+        // 1. Daily Nugget laden (Wissen des Tages)
         let nuggetHtml = '';
         try {
             const nugget = await UI.getDailyNugget(content);
@@ -62,35 +62,28 @@ const UI = {
         const today = new Date().toDateString();
         const stored = JSON.parse(localStorage.getItem('dailyNugget'));
 
-        // Wenn wir heute schon einen haben, nimm den (damit er nicht bei Reload wechselt)
         if (stored && stored.date === today) return stored;
 
-        // Sonst: Neuen generieren
         const scriptItems = content.filter(c => c.files && c.files.script);
         if (scriptItems.length === 0) return null;
 
-        // 1. Zufälliges Skript wählen
         const randomItem = scriptItems[Math.floor(Math.random() * scriptItems.length)];
         
         try {
-            // Skript fetchen
             const res = await fetch(randomItem.files.script);
             const text = await res.text();
             
-            // 2. Einen zufälligen Paragraphen extrahieren
-            // Splitte bei Leerzeilen, filtere Überschriften (#) und kurze Zeilen raus
+            // Paragraphen extrahieren (ohne Überschriften/Bilder)
             const paragraphs = text.split(/\n\n+/).filter(p => 
                 !p.trim().startsWith('#') && 
-                !p.trim().startsWith('![') && // Keine Bilder
-                p.trim().length > 60 && // Mindestlänge
-                p.trim().length < 400   // Maximallänge
+                !p.trim().startsWith('![') && 
+                p.trim().length > 60 && 
+                p.trim().length < 400
             );
 
             if(paragraphs.length === 0) return null;
 
             const randomPara = paragraphs[Math.floor(Math.random() * paragraphs.length)];
-            
-            // Markdown Syntax grob entfernen (Fett/Kursiv)
             const cleanText = randomPara.replace(/[\*\_\[\]]/g, '');
 
             const newNugget = {
@@ -165,8 +158,8 @@ const UI = {
         const iconClass = item.subjectKey === 'itm_grundlagen' ? 'fa-network-wired' : 'fa-project-diagram';
         const bgColor = isHighlight ? 'bg-gray-800 border-gray-600 shadow-lg' : 'bg-[#1c1c1e] border-white/5';
 
+        // Anki Link pur: Nur Protokoll, kein Web-Link Fallback
         const ankiLink = `anki://`; 
-        const ankiWebLink = `https://ankiweb.net/decks`;
 
         return `
         <div class="${bgColor} p-4 rounded-2xl flex flex-col gap-3 transition active:scale-[0.98] duration-200 border">
@@ -191,7 +184,7 @@ const UI = {
                     <i class="fas fa-play text-gray-500"></i> <span class="hidden sm:inline">Hören</span>
                 </button>` : ''}
 
-                <a href="${ankiLink}" onclick="var start=Date.now(); setTimeout(() => { if(Date.now()-start < 2000 && !document.hidden) window.open('${ankiWebLink}', '_blank'); }, 500);" class="flex-1 bg-gray-700 text-white hover:bg-gray-600 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-md transition">
+                <a href="${ankiLink}" class="flex-1 bg-gray-700 text-white hover:bg-gray-600 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-md transition">
                     <i class="fas fa-star text-xs text-yellow-500"></i> Anki
                 </a>
             </div>
@@ -208,7 +201,7 @@ const UI = {
              const titles = {'dashboard': 'Dashboard', 'library': 'Bibliothek'};
              document.getElementById('page-title').innerText = titles[tabName];
              if(tabName === 'library') UI.renderLibrary(app.data);
-             if(tabName === 'dashboard') UI.renderDashboard(app.data); // Neu laden für neuen Nugget check
+             if(tabName === 'dashboard') UI.renderDashboard(app.data); 
 
              document.querySelectorAll('.nav-btn').forEach(btn => {
                  btn.classList.remove('text-blue-500', 'active');
