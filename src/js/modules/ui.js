@@ -2,26 +2,31 @@
 const UI = {
     libraryState: 'itm_grundlagen',
 
+    // Hilfsfunktion für echtes Random-Mischen
+    _shuffle: (array) => {
+        const newArr = [...array];
+        for (let i = newArr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+        }
+        return newArr;
+    },
+
     renderDashboard: async (content) => {
         const container = document.getElementById('view-dashboard');
         if (!container) return; 
 
         const suggestions = SpacedRepetition.getSuggestions(content);
-        const hour = new Date().getHours();
-        const greeting = hour < 12 ? "Guten Morgen" : hour < 18 ? "Guten Tag" : "Guten Abend";
-
         let nuggetHtml = '';
         try {
             const nugget = await UI.getDailyNugget(content);
             if(nugget) {
                 nuggetHtml = `
-                <div class="mb-6 bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 p-5 rounded-3xl shadow-lg relative overflow-hidden group">
+                <div class="mb-6 bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 p-5 rounded-3xl shadow-lg relative overflow-hidden">
                      <div class="relative z-10">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded">Wissen des Tages</span>
-                        </div>
-                        <p class="text-gray-200 text-lg font-medium leading-relaxed italic">"${nugget.text}"</p>
-                        <button onclick="app.reader.open('${nugget.sourceUrl}', '${nugget.sourceTitle}', '${nugget.sourceId}')" class="mt-4 text-sm text-blue-400 font-medium hover:text-blue-300 transition flex items-center gap-1">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded">Wissen des Tages</span>
+                        <p class="mt-2 text-gray-200 text-lg font-medium italic">"${nugget.text}"</p>
+                        <button onclick="app.reader.open('${nugget.sourceUrl}', '${nugget.sourceTitle}', '${nugget.sourceId}')" class="mt-4 text-sm text-blue-400 font-medium flex items-center gap-1">
                             Zum Skript <i class="fas fa-arrow-right text-xs"></i>
                         </button>
                      </div>
@@ -29,20 +34,9 @@ const UI = {
             }
         } catch(e) { console.error(e); }
 
-        let html = `
-        ${nuggetHtml}
-        <h3 class="font-bold text-gray-300 mb-3 px-1 text-sm uppercase tracking-wider">Fokus der Woche</h3>
-        <div class="space-y-4">`;
-        
+        let html = `${nuggetHtml}<h3 class="font-bold text-gray-300 mb-3 px-1 text-sm uppercase tracking-wider">Fokus der Woche</h3><div class="space-y-4">`;
         suggestions.forEach(item => html += UI.createCard(item, true));
-        
-        if (suggestions.length === 0) {
-            html += `
-            <div class="bg-gray-800 p-8 rounded-3xl text-center border border-gray-700">
-                <p class="font-medium text-white">Alles erledigt!</p>
-            </div>`;
-        }
-        
+        if (suggestions.length === 0) html += `<div class="bg-gray-800 p-8 rounded-3xl text-center border border-gray-700"><p class="font-medium text-white">Alles erledigt!</p></div>`;
         html += '</div>';
         container.innerHTML = html;
     },
@@ -62,9 +56,7 @@ const UI = {
             const newNugget = {
                 date: today,
                 text: paragraphs[Math.floor(Math.random() * paragraphs.length)].replace(/[\*\_\[\]]/g, ''),
-                sourceTitle: randomItem.title,
-                sourceId: randomItem.id,
-                sourceUrl: randomItem.files.script
+                sourceTitle: randomItem.title, sourceId: randomItem.id, sourceUrl: randomItem.files.script
             };
             localStorage.setItem('dailyNugget', JSON.stringify(newNugget));
             return newNugget;
@@ -74,7 +66,6 @@ const UI = {
     renderLibrary: (content) => {
         const container = document.getElementById('view-library');
         if (!container) return;
-
         const isITM = UI.libraryState === 'itm_grundlagen';
         const filteredContent = content.filter(c => c.subjectKey === UI.libraryState);
         const activeClass = "bg-gray-700 text-white shadow-sm font-semibold";
@@ -88,10 +79,8 @@ const UI = {
             </div>
         </div>
         <div class="space-y-4 pb-24 animate-fade-in">`;
-        
         if (filteredContent.length === 0) html += `<div class="text-center py-12 text-gray-500"><p>Leer.</p></div>`;
         else filteredContent.forEach(item => html += UI.createCard(item));
-        
         html += '</div>';
         container.innerHTML = html;
     },
@@ -106,10 +95,6 @@ const UI = {
         const hasScript = !!item.files.script;
         const iconColor = item.subjectKey === 'itm_grundlagen' ? 'text-blue-400' : 'text-purple-400';
         const bgColor = isHighlight ? 'bg-gray-800 border-gray-600 shadow-lg' : 'bg-[#1c1c1e] border-white/5';
-        
-        // Link für den App-Switch zu Anki
-        const ankiLink = "anki://";
-
         return `
         <div class="${bgColor} p-4 rounded-2xl flex flex-col gap-3 transition active:scale-[0.98] duration-200 border">
             <div class="flex justify-between items-start">
@@ -122,8 +107,7 @@ const UI = {
             <div class="flex gap-2 mt-1">
                 ${hasScript ? `<button onclick="app.reader.open('${item.files.script}', '${item.title}', '${item.id}')" class="flex-1 bg-white/5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2">Lesen</button>` : ''}
                 ${hasAudio ? `<button onclick="app.player.load('${item.files.audio}', '${item.title}', '${item.id}')" class="flex-1 bg-white/5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2">Hören</button>` : ''}
-                
-                <a href="${ankiLink}" class="flex-1 bg-gray-700 text-white py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-md transition active:bg-gray-600">
+                <a href="anki://" class="flex-1 bg-gray-700 text-white py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-md transition active:bg-gray-600">
                     <i class="fas fa-star text-xs text-yellow-500"></i> Anki
                 </a>
             </div>
@@ -135,15 +119,18 @@ const UI = {
         const scrollWrapper = document.getElementById('scroll-wrapper');
         const viewForyou = document.getElementById('view-foryou');
         
-        if(document.getElementById('view-dashboard')) document.getElementById('view-dashboard').classList.add('hidden');
-        if(document.getElementById('view-library')) document.getElementById('view-library').classList.add('hidden');
-        if(viewForyou) viewForyou.classList.add('hidden');
+        document.querySelectorAll('.view-section').forEach(v => v.classList.add('hidden'));
 
         if (tabName === 'foryou') {
             if(scrollWrapper) scrollWrapper.classList.add('hidden');
             if(viewForyou) viewForyou.classList.remove('hidden');
             if(header) header.classList.add('-translate-y-full');
-            if(window.app && window.app.foryou) window.app.foryou.render(window.app.data);
+            
+            // WILD RANDOM LOGIK: Immer neu mischen beim Tab-Wechsel
+            if(window.app && window.app.data) {
+                const randomizedData = UI._shuffle(window.app.data);
+                window.app.foryou.render(randomizedData);
+            }
         } else {
             if(viewForyou) viewForyou.classList.add('hidden');
             if(scrollWrapper) scrollWrapper.classList.remove('hidden');
@@ -169,8 +156,7 @@ const UI = {
         const activeBtn = document.querySelector(`button[onclick*="${tabName}"]`);
         if(activeBtn) {
             activeBtn.classList.remove('text-gray-500');
-            if(tabName === 'foryou') activeBtn.classList.add('text-white', 'active');
-            else activeBtn.classList.add('text-blue-500', 'active');
+            activeBtn.classList.add(tabName === 'foryou' ? 'text-white' : 'text-blue-500', 'active');
         }
     }
 };
