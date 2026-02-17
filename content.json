@@ -1,312 +1,168 @@
 [
   {
-    "id": "Vom_Chaos_zur_Kontrolle",
-    "title": "Vom Chaos zur Kontrolle",
+    "id": "E09",
+    "title": "E09",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T19:44:48.895Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E09.md"
+    }
+  },
+  {
+    "id": "E09",
+    "title": "E09",
     "subject": "Org. & Projekte",
     "subjectKey": "organisation_projekte",
-    "added": "2026-02-17T19:11:54.523Z",
+    "added": "2026-02-17T19:45:13.566Z",
     "files": {
-      "video": "content/organisation_projekte/videos/Vom_Chaos_zur_Kontrolle.mp4"
+      "script": "content/organisation_projekte/scripts/E09.md"
     }
   },
   {
-    "id": "Projektmanagement",
-    "title": "Projektmanagement",
+    "id": "E08",
+    "title": "E08",
+    "subject": "ITM Grundlagen",
+    "subjectKey": "itm_grundlagen",
+    "added": "2026-02-17T19:44:48.895Z",
+    "files": {
+      "script": "content/itm_grundlagen/scripts/E08.md"
+    }
+  },
+  {
+    "id": "E08",
+    "title": "E08",
     "subject": "Org. & Projekte",
     "subjectKey": "organisation_projekte",
-    "added": "2026-02-17T19:11:54.571Z",
+    "added": "2026-02-17T19:45:13.566Z",
     "files": {
-      "video": "content/organisation_projekte/videos/Projektmanagement.mp4"
+      "script": "content/organisation_projekte/scripts/E08.md"
     }
   },
   {
-    "id": "Informationssicherheit",
-    "title": "Informationssicherheit",
+    "id": "E07",
+    "title": "E07",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T19:10:27.139Z",
+    "added": "2026-02-17T19:44:48.895Z",
     "files": {
-      "video": "content/itm_grundlagen/videos/Informationssicherheit.mp4"
+      "script": "content/itm_grundlagen/scripts/E07.md"
     }
   },
   {
-    "id": "Ihre_Digitale_Festung",
-    "title": "Ihre Digitale Festung",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T19:10:27.007Z",
+    "id": "E07",
+    "title": "E07",
+    "subject": "Org. & Projekte",
+    "subjectKey": "organisation_projekte",
+    "added": "2026-02-17T19:45:13.566Z",
     "files": {
-      "video": "content/itm_grundlagen/videos/Ihre_Digitale_Festung.mp4"
+      "script": "content/organisation_projekte/scripts/E07.md"
     }
   },
   {
-    "id": "IT-Infrastruktur_erklärt",
-    "title": "IT-Infrastruktur erklärt",
+    "id": "E06",
+    "title": "E06",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T19:10:27.195Z",
+    "added": "2026-02-17T19:44:48.895Z",
     "files": {
-      "video": "content/itm_grundlagen/videos/IT-Infrastruktur_erklärt.mp4"
+      "script": "content/itm_grundlagen/scripts/E06.md"
     }
   },
   {
-    "id": "E01 copy 9",
-    "title": "E01 copy 9",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:55.802Z",
+    "id": "E06",
+    "title": "E06",
+    "subject": "Org. & Projekte",
+    "subjectKey": "organisation_projekte",
+    "added": "2026-02-17T19:45:13.566Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 9.md"
+      "script": "content/organisation_projekte/scripts/E06.md"
     }
   },
   {
-    "id": "E01 copy 8",
-    "title": "E01 copy 8",
+    "id": "E05",
+    "title": "E05",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:55.641Z",
+    "added": "2026-02-17T19:44:48.895Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 8.md"
+      "script": "content/itm_grundlagen/scripts/E05.md"
     }
   },
   {
-    "id": "E01 copy 7",
-    "title": "E01 copy 7",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:55.473Z",
+    "id": "E05",
+    "title": "E05",
+    "subject": "Org. & Projekte",
+    "subjectKey": "organisation_projekte",
+    "added": "2026-02-17T19:45:13.565Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 7.md"
+      "script": "content/organisation_projekte/scripts/E05.md",
+      "video": "content/organisation_projekte/videos/E05.mp4"
     }
   },
   {
-    "id": "E01 copy 6",
-    "title": "E01 copy 6",
+    "id": "E04",
+    "title": "E04",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:55.298Z",
+    "added": "2026-02-17T19:44:48.895Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 6.md"
+      "script": "content/itm_grundlagen/scripts/E04.md"
     }
   },
   {
-    "id": "E01 copy 5",
-    "title": "E01 copy 5",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:55.132Z",
+    "id": "E04",
+    "title": "E04",
+    "subject": "Org. & Projekte",
+    "subjectKey": "organisation_projekte",
+    "added": "2026-02-17T19:45:13.565Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 5.md"
+      "script": "content/organisation_projekte/scripts/E04.md",
+      "video": "content/organisation_projekte/videos/E04.mp4"
     }
   },
   {
-    "id": "E01 copy 4",
-    "title": "E01 copy 4",
+    "id": "E03",
+    "title": "E03",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:54.948Z",
+    "added": "2026-02-17T19:44:48.895Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 4.md"
+      "script": "content/itm_grundlagen/scripts/E03.md",
+      "video": "content/itm_grundlagen/videos/E03.mp4"
     }
   },
   {
-    "id": "E01 copy 3",
-    "title": "E01 copy 3",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:54.764Z",
+    "id": "E03",
+    "title": "E03",
+    "subject": "Org. & Projekte",
+    "subjectKey": "organisation_projekte",
+    "added": "2026-02-17T19:45:13.565Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 3.md"
+      "script": "content/organisation_projekte/scripts/E03.md",
+      "video": "content/organisation_projekte/videos/E03.mp4"
     }
   },
   {
-    "id": "E01 copy 26",
-    "title": "E01 copy 26",
+    "id": "E02",
+    "title": "E02",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:58.665Z",
+    "added": "2026-02-17T19:44:48.895Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 26.md"
+      "script": "content/itm_grundlagen/scripts/E02.md",
+      "video": "content/itm_grundlagen/videos/E02.mp4"
     }
   },
   {
-    "id": "E01 copy 25",
-    "title": "E01 copy 25",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:58.487Z",
+    "id": "E02",
+    "title": "E02",
+    "subject": "Org. & Projekte",
+    "subjectKey": "organisation_projekte",
+    "added": "2026-02-17T19:45:13.565Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 25.md"
-    }
-  },
-  {
-    "id": "E01 copy 24",
-    "title": "E01 copy 24",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:58.318Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 24.md"
-    }
-  },
-  {
-    "id": "E01 copy 23",
-    "title": "E01 copy 23",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:58.151Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 23.md"
-    }
-  },
-  {
-    "id": "E01 copy 22",
-    "title": "E01 copy 22",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:57.995Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 22.md"
-    }
-  },
-  {
-    "id": "E01 copy 21",
-    "title": "E01 copy 21",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:57.819Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 21.md"
-    }
-  },
-  {
-    "id": "E01 copy 20",
-    "title": "E01 copy 20",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:57.645Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 20.md"
-    }
-  },
-  {
-    "id": "E01 copy 2",
-    "title": "E01 copy 2",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:54.146Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 2.md"
-    }
-  },
-  {
-    "id": "E01 copy 19",
-    "title": "E01 copy 19",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:57.454Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 19.md"
-    }
-  },
-  {
-    "id": "E01 copy 18",
-    "title": "E01 copy 18",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:57.290Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 18.md"
-    }
-  },
-  {
-    "id": "E01 copy 17",
-    "title": "E01 copy 17",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:57.121Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 17.md"
-    }
-  },
-  {
-    "id": "E01 copy 16",
-    "title": "E01 copy 16",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:56.965Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 16.md"
-    }
-  },
-  {
-    "id": "E01 copy 15",
-    "title": "E01 copy 15",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:56.807Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 15.md"
-    }
-  },
-  {
-    "id": "E01 copy 14",
-    "title": "E01 copy 14",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:56.656Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 14.md"
-    }
-  },
-  {
-    "id": "E01 copy 13",
-    "title": "E01 copy 13",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:56.470Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 13.md"
-    }
-  },
-  {
-    "id": "E01 copy 12",
-    "title": "E01 copy 12",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:56.299Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 12.md"
-    }
-  },
-  {
-    "id": "E01 copy 11",
-    "title": "E01 copy 11",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:56.133Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 11.md"
-    }
-  },
-  {
-    "id": "E01 copy 10",
-    "title": "E01 copy 10",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:55.965Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy 10.md"
-    }
-  },
-  {
-    "id": "E01 copy",
-    "title": "E01 copy",
-    "subject": "ITM Grundlagen",
-    "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:53.931Z",
-    "files": {
-      "script": "content/itm_grundlagen/scripts/E01 copy.md"
+      "script": "content/organisation_projekte/scripts/E02.md",
+      "video": "content/organisation_projekte/videos/E02.mp4"
     }
   },
   {
@@ -314,10 +170,11 @@
     "title": "E01",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T18:04:47.336Z",
+    "added": "2026-02-17T19:44:48.894Z",
     "files": {
       "script": "content/itm_grundlagen/scripts/E01.md",
-      "audio": "content/itm_grundlagen/audio/E01.m4a"
+      "audio": "content/itm_grundlagen/audio/E01.m4a",
+      "video": "content/itm_grundlagen/videos/E01.mp4"
     }
   },
   {
@@ -330,26 +187,6 @@
       "script": "content/organisation_projekte/scripts/E01.md",
       "audio": "content/organisation_projekte/audio/E01.m4a",
       "video": "content/organisation_projekte/videos/E01.mp4"
-    }
-  },
-  {
-    "id": "Die_Kosten_schlechter_Qualität",
-    "title": "Die Kosten schlechter Qualität",
-    "subject": "Org. & Projekte",
-    "subjectKey": "organisation_projekte",
-    "added": "2026-02-17T19:11:54.392Z",
-    "files": {
-      "video": "content/organisation_projekte/videos/Die_Kosten_schlechter_Qualität.mp4"
-    }
-  },
-  {
-    "id": "Das_90_-Syndrom",
-    "title": "Das 90 -Syndrom",
-    "subject": "Org. & Projekte",
-    "subjectKey": "organisation_projekte",
-    "added": "2026-02-17T19:11:54.435Z",
-    "files": {
-      "video": "content/organisation_projekte/videos/Das_90_-Syndrom.mp4"
     }
   }
 ]
