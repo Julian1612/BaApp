@@ -1,6 +1,7 @@
 const Player = {
     audio: null,
     btnPlay: null,
+    btnSpeed: null,
     progressBar: null,
     currentSpeed: 1.0,
 
@@ -13,9 +14,11 @@ const Player = {
         }
         Player.audio = audio;
         Player.btnPlay = document.getElementById('btn-play-pause');
+        Player.btnSpeed = document.getElementById('btn-speed');
         Player.progressBar = document.getElementById('progress-bar');
         
         if(Player.btnPlay) Player.btnPlay.onclick = Player.togglePlay;
+        if(Player.btnSpeed) Player.btnSpeed.onclick = Player.cycleSpeed;
         
         const btnBack = document.getElementById('btn-skip-back');
         if(btnBack) btnBack.onclick = () => Player.skip(-10);
@@ -45,6 +48,9 @@ const Player = {
         if(titleEl) titleEl.innerText = title;
         
         Player.audio.src = url;
+        Player.audio.playbackRate = Player.currentSpeed;
+        Player.updateSpeedUI();
+
         Player.audio.play()
             .then(() => {
                 if ('mediaSession' in navigator) {
@@ -62,7 +68,6 @@ const Player = {
             .catch(e => console.error("Playback failed:", e));
 
         Player.updateIcon(true);
-        Player.audio.playbackRate = Player.currentSpeed;
         
         if(playerEl) {
             playerEl.classList.remove('hidden');
@@ -73,7 +78,6 @@ const Player = {
         
         if(id && typeof SpacedRepetition !== 'undefined') {
             SpacedRepetition.markAsReviewed(id);
-            // Gamification XP
             if(app && app.ui && app.ui.gamification) {
                 app.ui.gamification.addXP(5);
             }
@@ -90,11 +94,12 @@ const Player = {
         }
     },
 
+    // Hier angepasst für größere Icons (text-2xl statt text-sm)
     updateIcon: (isPlaying) => {
         if(!Player.btnPlay) return;
         const icon = Player.btnPlay.querySelector('i');
         if(icon) {
-            icon.className = isPlaying ? 'fas fa-pause text-sm ml-0' : 'fas fa-play text-sm ml-0.5';
+            icon.className = isPlaying ? 'fas fa-pause text-2xl ml-0' : 'fas fa-play text-2xl ml-1';
         }
     },
 
@@ -113,5 +118,19 @@ const Player = {
         let idx = speeds.indexOf(Player.currentSpeed);
         Player.currentSpeed = speeds[(idx + 1) % speeds.length];
         Player.audio.playbackRate = Player.currentSpeed;
+        Player.updateSpeedUI();
+    },
+
+    updateSpeedUI: () => {
+        if(Player.btnSpeed) {
+            Player.btnSpeed.innerText = Player.currentSpeed + 'x';
+            if(Player.currentSpeed !== 1.0) {
+                Player.btnSpeed.classList.add('text-blue-500', 'bg-white/20');
+                Player.btnSpeed.classList.remove('text-gray-300');
+            } else {
+                Player.btnSpeed.classList.remove('text-blue-500', 'bg-white/20');
+                Player.btnSpeed.classList.add('text-gray-300');
+            }
+        }
     }
 };
