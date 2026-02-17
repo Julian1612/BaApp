@@ -1,14 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-    /* Dark Mode Palette (Apple Style) */
     --bg-body: #000000;
     --bg-card: #1c1c1e;
-    --bg-card-secondary: #2c2c2e;
     --text-primary: #ffffff;
     --text-secondary: #8e8e93;
     --accent-blue: #0a84ff;
-    --border-color: #38383a;
+    --ios-red: #FF453A;
 }
 
 body {
@@ -18,7 +16,7 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Glassmorphismus Dark */
+/* Glassmorphismus */
 .glass {
     background: rgba(28, 28, 30, 0.85);
     backdrop-filter: blur(20px);
@@ -26,20 +24,38 @@ body {
     border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
+/* Safe Areas - WICHTIG FÜR NAV */
 .safe-top { padding-top: max(env(safe-area-inset-top), 20px); }
-.safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 20px); }
 
-/* Reader Dark Mode Styles */
-.prose { color: #d1d1d6; }
-.prose h1, .prose h2, .prose h3 { color: #ffffff; }
-.prose strong { color: #ffffff; }
-.prose a { color: var(--accent-blue); }
-.prose blockquote { border-left-color: var(--accent-blue); color: #98989d; background: #1c1c1e; padding: 0.5rem 1rem; border-radius: 0 8px 8px 0; }
-.prose code { color: #ff9f0a; background: #2c2c2e; padding: 2px 4px; border-radius: 4px; }
+/* safe-bottom fügt nur Padding hinzu, keine fixe Höhe! */
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
 
+/* Scrollbar verstecken */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Gamification Styles */
+.gamification-hud { display: flex; align-items: center; gap: 12px; }
+.streak-container { display: flex; align-items: center; gap: 4px; background: rgba(255, 69, 58, 0.15); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(255, 69, 58, 0.3); }
+.fire-anim { animation: flicker 1.5s infinite alternate; color: var(--ios-red); filter: drop-shadow(0 0 5px var(--ios-red)); }
+@keyframes flicker { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.1); opacity: 1; } }
+
+.xp-container { position: relative; width: 80px; height: 6px; background: #2c2c2e; border-radius: 3px; overflow: hidden; }
+.xp-fill { height: 100%; background: linear-gradient(90deg, #0a84ff, #5e5ce6); width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px rgba(10, 132, 255, 0.5); }
+
+/* Confetti */
+#confetti-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
 
 /* Animationen */
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+@keyframes popInReward { 0% { transform: scale(0.5); opacity: 0; } 50% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+.animate-reward { animation: popInReward 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+/* Reader Styles */
+.prose { color: #d1d1d6; }
+.prose h1, .prose h2, .prose h3 { color: #ffffff; }
+.prose strong { color: #ffffff; }
+.prose a { color: var(--accent-blue); }
+.prose blockquote { border-left: 4px solid var(--accent-blue); padding-left: 1rem; color: #98989d; background: #1c1c1e; padding: 0.5rem 1rem; border-radius: 0 8px 8px 0; }
+.prose code { color: #ff9f0a; background: #2c2c2e; padding: 2px 4px; border-radius: 4px; }

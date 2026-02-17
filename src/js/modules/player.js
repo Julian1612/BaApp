@@ -16,13 +16,12 @@ const Player = {
         Player.progressBar = document.getElementById('progress-bar');
         
         if(Player.btnPlay) Player.btnPlay.onclick = Player.togglePlay;
+        
         const btnBack = document.getElementById('btn-skip-back');
         if(btnBack) btnBack.onclick = () => Player.skip(-10);
+        
         const btnFwd = document.getElementById('btn-skip-fwd');
         if(btnFwd) btnFwd.onclick = () => Player.skip(10);
-        
-        // Speed Button ist jetzt optional/versteckt im Minimal Design, 
-        // kann aber bei Bedarf wieder aktiviert werden.
         
         Player.audio.ontimeupdate = Player.updateProgress;
         Player.audio.onended = () => Player.updateIcon(false);
@@ -33,7 +32,6 @@ const Player = {
         Player.updateIcon(false);
         const playerEl = document.getElementById('mini-player');
         
-        // Slide Down Animation
         playerEl.classList.add('translate-y-full'); 
         setTimeout(() => {
             playerEl.classList.add('hidden');
@@ -66,10 +64,8 @@ const Player = {
         Player.updateIcon(true);
         Player.audio.playbackRate = Player.currentSpeed;
         
-        // Slide Up Animation
         if(playerEl) {
             playerEl.classList.remove('hidden');
-            // Kleiner Timeout damit der Browser den remove('hidden') registriert bevor er animiert
             requestAnimationFrame(() => {
                 playerEl.classList.remove('translate-y-full');
             });
@@ -77,6 +73,10 @@ const Player = {
         
         if(id && typeof SpacedRepetition !== 'undefined') {
             SpacedRepetition.markAsReviewed(id);
+            // Gamification XP
+            if(app && app.ui && app.ui.gamification) {
+                app.ui.gamification.addXP(5);
+            }
         }
     },
 
@@ -109,7 +109,6 @@ const Player = {
     },
     
     cycleSpeed: () => {
-        // Logik bleibt erhalten, auch wenn Button gerade ausgeblendet ist
         const speeds = [1.0, 1.25, 1.5, 2.0];
         let idx = speeds.indexOf(Player.currentSpeed);
         Player.currentSpeed = speeds[(idx + 1) % speeds.length];
