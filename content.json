@@ -26,7 +26,9 @@
     "subjectKey": "itm_grundlagen",
     "added": "2026-02-17T19:44:48.895Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E08.md"
+      "script": "content/itm_grundlagen/scripts/E08.md",
+      "audio": "content/itm_grundlagen/audio/E08.m4a",
+      "video": "content/itm_grundlagen/videos/E08.mp4"
     }
   },
   {
@@ -36,7 +38,8 @@
     "subjectKey": "organisation_projekte",
     "added": "2026-02-17T19:45:13.566Z",
     "files": {
-      "script": "content/organisation_projekte/scripts/E08.md"
+      "script": "content/organisation_projekte/scripts/E08.md",
+      "audio": "content/organisation_projekte/audio/E08.m4a"
     }
   },
   {
@@ -46,7 +49,9 @@
     "subjectKey": "itm_grundlagen",
     "added": "2026-02-17T19:44:48.895Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E07.md"
+      "script": "content/itm_grundlagen/scripts/E07.md",
+      "audio": "content/itm_grundlagen/audio/E07.m4a",
+      "video": "content/itm_grundlagen/videos/E07.mp4"
     }
   },
   {
@@ -56,7 +61,8 @@
     "subjectKey": "organisation_projekte",
     "added": "2026-02-17T19:45:13.566Z",
     "files": {
-      "script": "content/organisation_projekte/scripts/E07.md"
+      "script": "content/organisation_projekte/scripts/E07.md",
+      "audio": "content/organisation_projekte/audio/E07.m4a"
     }
   },
   {
@@ -66,7 +72,9 @@
     "subjectKey": "itm_grundlagen",
     "added": "2026-02-17T19:44:48.895Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E06.md"
+      "script": "content/itm_grundlagen/scripts/E06.md",
+      "audio": "content/itm_grundlagen/audio/E06.m4a",
+      "video": "content/itm_grundlagen/videos/E06.mp4"
     }
   },
   {
@@ -76,7 +84,8 @@
     "subjectKey": "organisation_projekte",
     "added": "2026-02-17T19:45:13.566Z",
     "files": {
-      "script": "content/organisation_projekte/scripts/E06.md"
+      "script": "content/organisation_projekte/scripts/E06.md",
+      "audio": "content/organisation_projekte/audio/E06.m4a"
     }
   },
   {
@@ -86,7 +95,9 @@
     "subjectKey": "itm_grundlagen",
     "added": "2026-02-17T19:44:48.895Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E05.md"
+      "script": "content/itm_grundlagen/scripts/E05.md",
+      "audio": "content/itm_grundlagen/audio/E05.m4a",
+      "video": "content/itm_grundlagen/videos/E05.mp4"
     }
   },
   {
@@ -97,6 +108,7 @@
     "added": "2026-02-17T19:45:13.565Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E05.md",
+      "audio": "content/organisation_projekte/audio/E05.m4a",
       "video": "content/organisation_projekte/videos/E05.mp4"
     }
   },
@@ -107,7 +119,8 @@
     "subjectKey": "itm_grundlagen",
     "added": "2026-02-17T19:44:48.895Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E04.md"
+      "script": "content/itm_grundlagen/scripts/E04.md",
+      "audio": "content/itm_grundlagen/audio/E04.m4a"
     }
   },
   {
@@ -118,6 +131,7 @@
     "added": "2026-02-17T19:45:13.565Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E04.md",
+      "audio": "content/organisation_projekte/audio/E04.m4a",
       "video": "content/organisation_projekte/videos/E04.mp4"
     }
   },
@@ -129,6 +143,7 @@
     "added": "2026-02-17T19:44:48.895Z",
     "files": {
       "script": "content/itm_grundlagen/scripts/E03.md",
+      "audio": "content/itm_grundlagen/audio/E03.m4a",
       "video": "content/itm_grundlagen/videos/E03.mp4"
     }
   },
@@ -140,6 +155,7 @@
     "added": "2026-02-17T19:45:13.565Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E03.md",
+      "audio": "content/organisation_projekte/audio/E03.m4a",
       "video": "content/organisation_projekte/videos/E03.mp4"
     }
   },
@@ -151,6 +167,7 @@
     "added": "2026-02-17T19:44:48.895Z",
     "files": {
       "script": "content/itm_grundlagen/scripts/E02.md",
+      "audio": "content/itm_grundlagen/audio/E02.m4a",
       "video": "content/itm_grundlagen/videos/E02.mp4"
     }
   },
@@ -162,6 +179,7 @@
     "added": "2026-02-17T19:45:13.565Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E02.md",
+      "audio": "content/organisation_projekte/audio/E02.m4a",
       "video": "content/organisation_projekte/videos/E02.mp4"
     }
   },
@@ -185,7 +203,6 @@
     "added": "2026-02-17T14:53:49.899Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E01.md",
-      "audio": "content/organisation_projekte/audio/E01.m4a",
       "video": "content/organisation_projekte/videos/E01.mp4"
     }
   }
