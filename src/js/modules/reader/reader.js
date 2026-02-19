@@ -16,7 +16,6 @@ const Reader = {
         const item = window.app.data.find(i => i.id === id);
         const audioUrl = item && item.files ? item.files.audio : null;
         
-        // Check Flashcards Async
         let hasFlashcards = false;
         if (item) {
             const flashcardUrl = `content/${item.subjectKey}/flashcards/${item.id}.csv`;
@@ -36,8 +35,6 @@ const Reader = {
         try {
             const res = await fetch(url);
             const text = await res.text();
-            
-            // Generate HTML & Wrap Tables
             let html = Reader.converter.makeHtml(text);
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = html;
@@ -69,6 +66,7 @@ const Reader = {
         const selection = window.getSelection().toString().trim();
         const btn = document.getElementById('save-note-btn');
         const btnText = document.getElementById('save-note-text');
+        
         if (selection.length > 0) {
             Reader.currentDraft = selection;
             if (btn) {
@@ -82,7 +80,8 @@ const Reader = {
     toggleEdit: () => {
         Reader.editMode = !Reader.editMode;
         const btn = document.getElementById('reader-edit-btn');
-        const footer = document.getElementById('reader-footer');
+        const footer = document.getElementById('reader-edit-footer');
+        
         if (Reader.editMode) {
             btn.classList.add('text-yellow-500', 'bg-yellow-500/10');
             footer.classList.remove('hidden');
@@ -110,30 +109,34 @@ const Reader = {
     },
 
     _getTemplate: (title, audioUrl, id, hasFlashcards) => `
-        <div class="sticky top-0 z-[110] bg-[#1c1c1e] border-b border-white/10 shadow-lg" style="padding-top: max(env(safe-area-inset-top), 20px);">
-            <div class="h-14 px-4 flex justify-between items-center gap-3">
-                <button onclick="Reader.close()" class="w-10 h-10 flex items-center justify-center text-gray-400 active:text-white transition"><i class="fas fa-chevron-left text-lg"></i></button>
+        <div class="sticky top-0 z-[110] bg-[#1c1c1e]/80 backdrop-blur-xl border-b border-white/10" style="padding-top: max(env(safe-area-inset-top), 40px);">
+            <div class="h-14 px-4 flex justify-between items-center gap-4">
+                <button onclick="Reader.close()" class="w-12 h-12 flex items-center justify-center text-gray-400 active:text-white transition"><i class="fas fa-times text-2xl"></i></button>
                 <h2 class="text-sm font-bold truncate text-white flex-1 text-center">${title}</h2>
-                <div class="flex gap-2">
-                    ${hasFlashcards ? `
-                    <button onclick="Flashcards.open('${id}')" class="w-10 h-10 flex items-center justify-center text-green-500 rounded-full transition active:bg-white/10">
-                        <i class="fas fa-clone text-lg"></i>
-                    </button>` : ''}
-                    ${audioUrl ? `
-                    <button onclick="app.player.load('${audioUrl}', '${title.replace(/'/g, "\\'")}', '${id}')" class="w-10 h-10 flex items-center justify-center text-blue-400 rounded-full transition active:bg-white/10">
-                        <i class="fas fa-headphones text-lg"></i>
-                    </button>` : ''}
-                    <button id="reader-edit-btn" onclick="Reader.toggleEdit()" class="w-10 h-10 flex items-center justify-center text-gray-400 rounded-full transition active:bg-white/10">
-                        <i class="fas fa-pen-nib text-lg"></i>
-                    </button>
-                </div>
+                <div class="w-12"></div> <!-- Spacer -->
             </div>
         </div>
+
         <div id="reader-content" class="prose max-w-2xl mx-auto px-5 pt-8 pb-40 min-h-screen"></div>
-        <div id="notes-section" class="max-w-2xl mx-auto px-5 pb-48"><h3 class="text-white font-bold text-xl mb-6 border-b border-white/10 pb-2">Deine Notizen</h3><div id="notes-list" class="space-y-4"></div></div>
-        <div id="reader-footer" class="hidden fixed bottom-0 left-0 right-0 z-[120] bg-[#1c1c1e] border-t border-white/10 p-4 safe-bottom backdrop-blur-xl shadow-2xl" style="padding-bottom: max(env(safe-area-inset-bottom), 30px);">
-            <button id="save-note-btn" onclick="Reader.openNoteInput()" class="w-full bg-gray-800 text-gray-400 opacity-50 font-bold py-4 rounded-xl transition flex items-center justify-center gap-2"><i class="fas fa-highlighter"></i><span id="save-note-text">Bitte Text markieren...</span></button>
+        <div id="notes-section" class="max-w-2xl mx-auto px-5 pb-56"><h3 class="text-white font-bold text-xl mb-6 border-b border-white/10 pb-2">Deine Notizen</h3><div id="notes-list" class="space-y-4"></div></div>
+
+        <!-- EDIT MODE FOOTER -->
+        <div id="reader-edit-footer" class="hidden fixed bottom-24 left-0 right-0 z-[130] p-4 safe-bottom" style="padding-bottom: calc(1rem + env(safe-area-inset-bottom));">
+            <button id="save-note-btn" onclick="Reader.openNoteInput()" class="w-full max-w-xl mx-auto bg-gray-800 text-gray-400 opacity-50 font-bold py-4 rounded-2xl transition flex items-center justify-center gap-2 shadow-2xl">
+                <i class="fas fa-highlighter"></i><span id="save-note-text">Bitte Text markieren...</span>
+            </button>
         </div>
+        
+        <!-- MAIN ACTIONS FOOTER -->
+        <div id="reader-main-footer" class="fixed bottom-0 left-0 right-0 z-[120] bg-black/50 backdrop-blur-xl border-t border-white/10" style="padding-bottom: env(safe-area-inset-bottom);">
+            <div class="flex justify-around items-center h-20 max-w-xl mx-auto">
+                ${hasFlashcards ? `<button onclick="Flashcards.open('${id}')" class="flex-1 h-full flex flex-col items-center justify-center gap-1 text-green-400"><i class="fas fa-clone text-xl"></i><span class="text-xs font-medium">Lernen</span></button>` : ''}
+                ${audioUrl ? `<button onclick="app.player.load('${audioUrl}', '${title.replace(/'/g, "\\'")}', '${id}')" class="flex-1 h-full flex flex-col items-center justify-center gap-1 text-blue-400"><i class="fas fa-headphones text-xl"></i><span class="text-xs font-medium">Hören</span></button>` : ''}
+                <button id="reader-edit-btn" onclick="Reader.toggleEdit()" class="flex-1 h-full flex flex-col items-center justify-center gap-1 text-yellow-400"><i class="fas fa-pen-nib text-xl"></i><span class="text-xs font-medium">Notiz</span></button>
+            </div>
+        </div>
+        
+        <!-- MODALS -->
         <div id="input-modal" class="hidden fixed inset-0 z-[150] flex items-center justify-center px-4">
             <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="Reader.closeModals()"></div>
             <div class="bg-[#2c2c2e] border border-white/10 w-full max-w-sm rounded-3xl shadow-2xl relative z-10 p-5">
