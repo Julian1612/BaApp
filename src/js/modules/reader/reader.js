@@ -15,9 +15,19 @@ const Reader = {
         
         const item = window.app.data.find(i => i.id === id);
         const audioUrl = item && item.files ? item.files.audio : null;
+        
+        // Check Flashcards Async
+        let hasFlashcards = false;
+        if (item) {
+            const flashcardUrl = `content/${item.subjectKey}/flashcards/${item.id}.csv`;
+            try {
+                const res = await fetch(flashcardUrl, { method: 'HEAD' });
+                if (res.ok) hasFlashcards = true;
+            } catch(e) {}
+        }
 
         const readerView = document.getElementById('view-reader');
-        readerView.innerHTML = Reader._getTemplate(title, audioUrl, id);
+        readerView.innerHTML = Reader._getTemplate(title, audioUrl, id, hasFlashcards);
         readerView.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
 
@@ -27,24 +37,19 @@ const Reader = {
             const res = await fetch(url);
             const text = await res.text();
             
-            // Generate HTML
+            // Generate HTML & Wrap Tables
             let html = Reader.converter.makeHtml(text);
-            
-            // Post-process to wrap tables for horizontal scrolling
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = html;
             tempDiv.querySelectorAll('table').forEach(table => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'overflow-x-auto my-6 border border-white/10 rounded-xl bg-[#1c1c1e]';
-                table.style.margin = '0'; // Remove default margin from table
-                table.style.border = 'none'; // Remove default border from table
-                table.style.borderRadius = '0'; 
+                table.style.margin = '0'; table.style.border = 'none'; table.style.borderRadius = '0'; 
                 table.parentNode.insertBefore(wrapper, table);
                 wrapper.appendChild(table);
             });
             
             document.getElementById('reader-content').innerHTML = tempDiv.innerHTML;
-            
             Reader.renderNotes();
             if(id && window.SpacedRepetition) SpacedRepetition.markAsReviewed(id);
         } catch (e) {
@@ -104,12 +109,16 @@ const Reader = {
         }
     },
 
-    _getTemplate: (title, audioUrl, id) => `
+    _getTemplate: (title, audioUrl, id, hasFlashcards) => `
         <div class="sticky top-0 z-[110] bg-[#1c1c1e] border-b border-white/10 shadow-lg" style="padding-top: max(env(safe-area-inset-top), 20px);">
             <div class="h-14 px-4 flex justify-between items-center gap-3">
                 <button onclick="Reader.close()" class="w-10 h-10 flex items-center justify-center text-gray-400 active:text-white transition"><i class="fas fa-chevron-left text-lg"></i></button>
                 <h2 class="text-sm font-bold truncate text-white flex-1 text-center">${title}</h2>
                 <div class="flex gap-2">
+                    ${hasFlashcards ? `
+                    <button onclick="Flashcards.open('${id}')" class="w-10 h-10 flex items-center justify-center text-green-500 rounded-full transition active:bg-white/10">
+                        <i class="fas fa-clone text-lg"></i>
+                    </button>` : ''}
                     ${audioUrl ? `
                     <button onclick="app.player.load('${audioUrl}', '${title.replace(/'/g, "\\'")}', '${id}')" class="w-10 h-10 flex items-center justify-center text-blue-400 rounded-full transition active:bg-white/10">
                         <i class="fas fa-headphones text-lg"></i>

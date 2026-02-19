@@ -1,0 +1,254 @@
+:root {
+  --bg-black: #000000;
+  --zinc-950: #09090b;
+  --zinc-900: #121214;
+  --zinc-800: #27272a;
+  --zinc-500: #71717a;
+  --white: #ffffff;
+  --radius-outer: 22px;
+  --radius-inner: 12px;
+}
+
+/* --- BASIS --- */
+.card {
+  font-family: "Inter", -apple-system, sans-serif;
+  background-color: var(--bg-black);
+  color: var(--white);
+  padding: 4px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.card-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px 18px; /* Kompakt für Mini */
+  background-color: var(--zinc-950);
+  border: 1px solid var(--zinc-800);
+  border-radius: var(--radius-outer);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  min-height: 250px;
+}
+
+/* --- HEADER --- */
+.header-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.course-pill { background: var(--white); color: var(--bg-black); padding: 4px 10px; border-radius: 100px; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; }
+.topic-dimmed { color: var(--zinc-500); font-size: 10px; font-weight: 500; }
+.dimmed { opacity: 0.3; }
+
+/* --- CONTENT & NEUE EFFEKTE --- */
+.question-text { font-size: 19px; font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; }
+.question-ref { font-size: 11px; color: var(--zinc-500); margin-bottom: 8px; }
+.answer-main { font-size: 16.5px; line-height: 1.5; color: #f4f4f5; }
+
+/* UNTERBEWUSSTES AUFLEUCHTEN DER KEYWORDS */
+b, strong { 
+  color: var(--white); 
+  font-weight: 800; 
+  display: inline-block;
+  animation: keywordGlow 1.8s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+}
+
+@keyframes keywordGlow {
+  0% { transform: scale(1); text-shadow: 0 0 0px #fff; }
+  20% { transform: scale(1.03); text-shadow: 0 0 12px #fff; }
+  100% { transform: scale(1); text-shadow: 0 0 0px transparent; }
+}
+
+/* COGNITIVE SPOTLIGHT (Dimmung der Ränder) */
+.active-state::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 80px rgba(0,0,0,0);
+  pointer-events: none;
+  animation: focusDim 4s ease-out forwards;
+}
+
+@keyframes focusDim {
+  to { box-shadow: inset 0 0 100px rgba(0,0,0,0.4); }
+}
+
+/* --- MODULE --- */
+.bento-grid, .hints-wrapper { display: flex; flex-direction: column; gap: 6px; margin-top: 20px; }
+.bento-item, .hint-card { background: var(--zinc-900); border: 1px solid rgba(255,255,255,0.02); border-radius: var(--radius-inner); overflow: hidden; }
+.bento-item[open], .hint-card[open] { border-color: var(--zinc-800); background: var(--bg-black); }
+
+.label, summary { padding: 12px 14px; font-size: 9px; font-weight: 800; color: var(--zinc-500); text-transform: uppercase; cursor: pointer; list-style: none; outline: none; }
+.status-dot { width: 4px; height: 4px; background: var(--zinc-800); border-radius: 50%; margin-right: 10px; display: inline-block; vertical-align: middle; transition: all 0.3s ease; }
+.hint-card[open] .status-dot { background: var(--white); box-shadow: 0 0 8px var(--white); }
+
+.bento-content, .hint-content { padding: 0 14px 14px 14px; font-size: 13px; color: var(--zinc-400); line-height: 1.4; }
+.hint-content { padding-left: 28px; font-style: italic; }
+
+/* --- FOOTER & GLOW-STAR --- */
+.mnemonic-footer { margin-top: 25px; text-align: center; font-size: 10px; color: var(--zinc-800); padding-bottom: 12px; }
+
+.glow-star {
+  display: inline-block;
+  color: var(--white);
+  font-size: 13px;
+  animation: starPulse 2.5s infinite ease-in-out;
+}
+
+@keyframes starPulse {
+  0%, 100% { transform: scale(1); text-shadow: 0 0 2px rgba(255,255,255,0.2); opacity: 0.6; }
+  50% { transform: scale(1.2); text-shadow: 0 0 12px rgba(255,255,255,0.8); opacity: 1; }
+}
+
+.mastery-line {
+  position: absolute; bottom: 0; left: 0; height: 1px; width: 0%;
+  background: linear-gradient(90deg, transparent, var(--zinc-500), transparent);
+  transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.card-container:has(details[open]) .mastery-line { width: 50%; }
+.card-container:has(details[open] + details[open]) .mastery-line { width: 100%; }
+
+/* IPHONE 12 MINI VERTICAL BALANCE */
+@media (max-height: 700px) {
+  .card-container { padding: 16px 14px; }
+  .question-text { font-size: 17.5px; margin-bottom: 8px; }
+  .answer-main { font-size: 15.5px; }
+  .header-nav { margin-bottom: 15px; }
+}
+
+/* --- MC QUIZ INTEGRATION (iPhone Optimized) --- */
+
+.mc-section {
+  margin: 15px 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Zentriert alles */
+}
+
+/* Container für den Button zum Zentrieren */
+.mc-trigger-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Der neue kompakte Button */
+.mc-trigger-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px; /* Pill Shape */
+  padding: 6px 16px;   /* Klein und kompakt */
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  /* Touch target für iPhone trotzdem groß genug halten */
+  min-height: 32px; 
+}
+
+.mc-trigger-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.mc-trigger-btn:active {
+  transform: scale(0.96);
+}
+
+/* Quiz Container (Interface) */
+.quiz-container {
+  width: 100%; /* Nimmt volle Breite ein wenn geöffnet */
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 5px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header im Quiz */
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 0 2px;
+}
+
+.quiz-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 700;
+}
+
+/* 50:50 Joker Pill */
+.joker-pill {
+  background: transparent;
+  border: 1px solid rgba(100, 200, 255, 0.3);
+  color: #64c8ff;
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.joker-pill:active {
+  background: rgba(100, 200, 255, 0.15);
+}
+
+.joker-pill.used {
+  opacity: 0.3;
+  text-decoration: line-through;
+  pointer-events: none;
+  border-color: transparent;
+}
+
+/* Antwort-Stack */
+.options-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Antwort Option */
+.quiz-option {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  position: relative;
+  /* iPhone Optimization */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.quiz-option:active:not(.locked) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Status Farben */
+.quiz-option.reveal-correct {
+  background: rgba(46, 204, 113, 0.15) !important;
+  border-color: rgba(46, 204, 113, 0.5) !important;
+  color: #2ecc71 !important;
+  font-weight: 600;
+}
+
+.quiz-option.reveal-wrong {
+  background: rgba(231, 76, 60, 0.15) !important;
+  border-color: rgba(231, 76, 60, 0.5) !important;
+  opacity: 0.6;
+}

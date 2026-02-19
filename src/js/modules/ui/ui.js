@@ -1,7 +1,6 @@
 const UI = {
     libraryState: 'itm_grundlagen',
 
-    // Hilfsfunktion für echtes Random-Mischen (Fisher-Yates Shuffle)
     _shuffle: (array) => {
         const newArr = [...array];
         for (let i = newArr.length - 1; i > 0; i--) {
@@ -26,15 +25,14 @@ const UI = {
                 <div class="${iconColor} bg-white/5 w-10 h-10 rounded-full flex items-center justify-center border border-white/5"><i class="fas fa-layer-group"></i></div>
             </div>
             <div class="flex gap-2 mt-1">
-                ${hasScript ? `<button onclick="app.reader.open('${item.files.script}', '${item.title}', '${item.id}')" class="flex-1 bg-white/5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2">Lesen</button>` : ''}
-                ${hasAudio ? `<button onclick="app.player.load('${item.files.audio}', '${item.title}', '${item.id}')" class="flex-1 bg-white/5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2">Hören</button>` : ''}
-                <a href="anki://" class="flex-1 bg-gray-700 text-white py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-md transition active:bg-gray-600">
-                    <i class="fas fa-star text-xs text-yellow-500"></i> Anki
-                </a>
+                ${hasScript ? `<button onclick="app.reader.open('${item.files.script}', '${item.title.replace(/'/g, "\\'")}', '${item.id}')" class="flex-1 bg-white/5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 active:bg-white/10 transition">Lesen</button>` : ''}
+                ${hasAudio ? `<button onclick="app.player.load('${item.files.audio}', '${item.title.replace(/'/g, "\\'")}', '${item.id}')" class="flex-1 bg-white/5 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 active:bg-white/10 transition">Hören</button>` : ''}
+                <button onclick="Flashcards.open('${item.id}')" class="flex-1 bg-green-500/10 text-green-500 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 border border-green-500/20 active:scale-95 transition">
+                    <i class="fas fa-clone text-xs"></i> Lernen
+                </button>
             </div>
         </div>`;
     }
 };
 
-// Globaler Alias für window.app.ui
 window.UI = UI;

@@ -80,7 +80,7 @@ Object.assign(UI, {
         return null;
     },
 
-    openContentSelection: (id) => {
+    openContentSelection: async (id) => {
         const item = window.app.data.find(i => i.id === id);
         if (!item) return;
 
@@ -90,6 +90,7 @@ Object.assign(UI, {
 
         let html = '';
         
+        // SCRIPT
         if (item.files.script) {
             html += `
             <button onclick="app.reader.open('${item.files.script}', '${item.title.replace(/'/g, "\\'")}', '${item.id}'); UI.closeActionSheet()" class="w-full bg-[#2c2c2e] hover:bg-[#3a3a3c] text-white p-4 rounded-xl flex items-center gap-4 transition group">
@@ -99,6 +100,7 @@ Object.assign(UI, {
             </button>`;
         }
 
+        // PODCAST
         if (item.files.audio) {
             html += `
             <button onclick="app.player.load('${item.files.audio}', '${item.title.replace(/'/g, "\\'")}', '${item.id}'); UI.closeActionSheet()" class="w-full bg-[#2c2c2e] hover:bg-[#3a3a3c] text-white p-4 rounded-xl flex items-center gap-4 transition group">
@@ -108,9 +110,24 @@ Object.assign(UI, {
             </button>`;
         }
 
+        // FLASHCARDS (Dynamic Check)
+        const flashcardUrl = `content/${item.subjectKey}/flashcards/${item.id}.csv`;
+        try {
+            const res = await fetch(flashcardUrl, { method: 'HEAD' });
+            if (res.ok) {
+                html += `
+                <button onclick="Flashcards.open('${item.id}'); UI.closeActionSheet()" class="w-full bg-[#2c2c2e] hover:bg-[#3a3a3c] text-white p-4 rounded-xl flex items-center gap-4 transition group">
+                    <div class="w-12 h-12 rounded-full bg-green-500/10 text-green-500 flex items-center justify-center group-active:scale-90 transition"><i class="fas fa-clone text-xl"></i></div>
+                    <div class="text-left"><div class="font-bold">Lernen</div><div class="text-xs text-gray-400">Karteikarten</div></div>
+                    <i class="fas fa-chevron-right text-gray-600 ml-auto"></i>
+                </button>`;
+            }
+        } catch(e) {}
+
+        // VIDEO (Placeholder)
         if (item.files.video) {
              html += `
-            <button onclick="/* Video Logic Here */" class="w-full bg-[#2c2c2e] hover:bg-[#3a3a3c] text-white p-4 rounded-xl flex items-center gap-4 transition group opacity-50 cursor-not-allowed">
+            <button onclick="/* Video Logic */" class="w-full bg-[#2c2c2e] hover:bg-[#3a3a3c] text-white p-4 rounded-xl flex items-center gap-4 transition group opacity-50 cursor-not-allowed">
                 <div class="w-12 h-12 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center"><i class="fas fa-play text-xl"></i></div>
                 <div class="text-left"><div class="font-bold">Video</div><div class="text-xs text-gray-400">Bald verfügbar</div></div>
             </button>`;
