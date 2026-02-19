@@ -5,33 +5,43 @@ Object.assign(ForYou, {
 
         container.innerHTML = '<div class="h-full flex items-center justify-center"><i class="fas fa-spinner fa-spin text-4xl text-gray-500"></i></div>';
 
-        // Load more candidates to fill the feed
-        const candidates = content.slice(0, 30); 
-        const feedItems = [];
-
-        for (const item of candidates) {
-            // Case 1: Video (Add sparingly or mix)
-            if (item.files.video) {
-                feedItems.push({ type: 'video', data: item });
-            }
-
-            // Case 2: Flashcards (HEAVY PRIORITY)
-            const url = `content/${item.subjectKey}/flashcards/${item.id}.csv`;
+        const videoPool = content.filter(c => c.files && c.files.video);
+        const cardTopicPool = content.filter(c => !c.files.video && c.files.script); // Assuming these have flashcards
+        
+        // Resolve all individual cards for the feed
+        let cardPool = [];
+        for (const topic of cardTopicPool.slice(0, 15)) {
+            const url = `content/${topic.subjectKey}/flashcards/${topic.id}.csv`;
             try {
                 const res = await fetch(url);
                 if (res.ok) {
                     const text = await res.text();
-                    const deck = Flashcards.parseCSV(text, item.id);
-                    if (deck.length > 0) {
-                        // BURST: 4-6 cards per deck to dominate the feed
-                        const burstSize = Math.floor(Math.random() * 3) + 4; 
-                        for (let i = 0; i < burstSize; i++) {
-                            const randomCard = deck[Math.floor(Math.random() * deck.length)];
-                            feedItems.push({ type: 'card', item: item, card: randomCard, index: i, total: deck.length });
-                        }
-                    }
+                    const deck = Flashcards.parseCSV(text, topic.id);
+                    deck.forEach((c, i) => cardPool.push({ item: topic, card: c, index: i }));
                 }
             } catch (e) {}
+        }
+        
+        // Shuffle pools
+        UI._shuffle(videoPool);
+        UI._shuffle(cardPool);
+
+        // SEQUENCER: 2-5 Cards -> 1-2 Videos
+        const feedItems = [];
+        let vIdx = 0;
+        let cIdx = 0;
+
+        while (cIdx < cardPool.length || vIdx < videoPool.length) {
+            // Add 2-5 cards
+            const cCount = Math.floor(Math.random() * 4) + 2; 
+            for (let i = 0; i < cCount && cIdx < cardPool.length; i++) {
+                feedItems.push({ type: 'card', ...cardPool[cIdx++] });
+            }
+            // Add 1-2 videos
+            const vCount = Math.floor(Math.random() * 2) + 1;
+            for (let i = 0; i < vCount && vIdx < videoPool.length; i++) {
+                feedItems.push({ type: 'video', data: videoPool[vIdx++] });
+            }
         }
 
         if (feedItems.length === 0) {
@@ -73,13 +83,17 @@ Object.assign(ForYou, {
                     </div>
                 </div>`;
             } else {
-                // FLASHCARD ITEM
-                // We reuse the exact Flashcard visual style (card-container, etc.)
+                // FLASHCARD
                 const item = entry.item;
                 const card = entry.card;
                 const cardElId = `feed-card-${idx}`;
                 
-                // Front Template Content
+                const hints = `
+                <div class="hints-wrapper mt-4" onclick="event.stopPropagation()">
+                  ${card.Hinweis_1 ? `<details class="hint-card"><summary><span class="status-dot"></span>Tipp 01</summary><div class="hint-content">${card.Hinweis_1}</div></details>` : ''}
+                  ${card.Hinweis_2 ? `<details class="hint-card"><summary><span class="status-dot"></span>Tipp 02</summary><div class="hint-content">${card.Hinweis_2}</div></details>` : ''}
+                </div>`;
+
                 const frontContent = `
                     <div class="card-container h-full flex flex-col">
                         <div class="header-nav">
@@ -88,14 +102,13 @@ Object.assign(ForYou, {
                         </div>
                         <div class="content-focus flex-1 flex flex-col justify-center">
                             <div class="question-text text-center">${card.Frage}</div>
+                            ${hints}
                         </div>
-                        <div class="mt-auto pt-6 text-center">
-                            <span class="text-xs text-blue-400 font-bold uppercase tracking-widest animate-pulse">Tippen für Antwort</span>
+                        <div class="mt-auto pt-4 text-center">
+                            <span class="text-[10px] text-blue-400 font-bold uppercase tracking-widest animate-pulse">Tippen für Antwort</span>
                         </div>
-                    </div>
-                `;
+                    </div>`;
 
-                // Back Template Content
                 const backContent = `
                     <div class="card-container active-state h-full flex flex-col">
                         <div class="header-nav dimmed">
@@ -103,25 +116,21 @@ Object.assign(ForYou, {
                             <div class="topic-dimmed truncate">${item.title}</div>
                         </div>
                         <div class="content-focus spotlight-effect flex-1 overflow-y-auto">
-                            <div class="question-ref text-xs text-gray-500 mb-2">${card.Frage}</div>
-                            <div class="answer-main text-lg leading-relaxed">${card.Antwort}</div>
+                            <div class="question-ref text-[10px] text-gray-500 mb-2">${card.Frage}</div>
+                            <div class="answer-main text-base leading-relaxed">${card.Antwort}</div>
                         </div>
-                        <div class="footer-area mt-4 pt-4 border-t border-white/10 text-center">
+                        <div class="footer-area mt-4 pt-4 border-t border-white/5 text-center">
                             <span class="text-[10px] text-gray-500 uppercase tracking-widest">Nächste Karte</span>
                         </div>
-                    </div>
-                `;
+                    </div>`;
 
                 html += `
-                <div class="video-snap-item relative w-full h-full flex flex-col items-center justify-center bg-[#000000] border-b border-gray-800 shrink-0 snap-center p-4" onclick="ForYou.flipCard('${cardElId}')">
-                    <div id="${cardElId}" class="w-full max-w-md aspect-[3/4] perspective-1000 group cursor-pointer">
+                <div class="video-snap-item relative w-full h-full flex flex-col items-center justify-center bg-black border-b border-gray-800 shrink-0 snap-center p-4" onclick="ForYou.flipCard('${cardElId}')">
+                    <div id="${cardElId}" class="w-full max-w-md aspect-[3/4.5] perspective-1000 group cursor-pointer">
                         <div class="relative preserve-3d transition-transform duration-500 ease-out-back w-full h-full">
-                            <!-- FRONT (Z-Index ensures visibility) -->
                             <div class="absolute inset-0 backface-hidden bg-[#1c1c1e] rounded-[22px] shadow-2xl overflow-hidden border border-white/10">
                                 ${frontContent}
                             </div>
-
-                            <!-- BACK (Rotated) -->
                             <div class="absolute inset-0 backface-hidden rotate-y-180 bg-[#1c1c1e] rounded-[22px] shadow-2xl overflow-hidden border border-blue-500/30">
                                 ${backContent}
                             </div>
@@ -141,11 +150,8 @@ Object.assign(ForYou, {
         const wrapper = document.getElementById(id);
         if (wrapper) {
             const inner = wrapper.querySelector('.preserve-3d');
-            if (inner.style.transform === 'rotateY(180deg)') {
-                inner.style.transform = 'rotateY(0deg)';
-            } else {
-                inner.style.transform = 'rotateY(180deg)';
-            }
+            const currentRotation = inner.style.transform;
+            inner.style.transform = currentRotation === 'rotateY(180deg)' ? 'rotateY(0deg)' : 'rotateY(180deg)';
         }
     },
 
