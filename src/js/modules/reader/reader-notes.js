@@ -1,4 +1,3 @@
-/* src/js/modules/reader-notes.js */
 Object.assign(Reader, {
     saveHighlight: () => {
         const selection = window.getSelection();
@@ -26,21 +25,21 @@ Object.assign(Reader, {
 
     renderNotes: () => {
         const list = document.getElementById('notes-list');
+        if(!list) return;
         const allNotes = JSON.parse(localStorage.getItem('studyNotes')) || {};
-        const notes = allNotes[Reader.currentId] || [];
-        notes.sort((a, b) => b.id - a.id);
+        const notes = (allNotes[Reader.currentId] || []).sort((a, b) => b.id - a.id);
         if (notes.length === 0) {
             list.innerHTML = `<div class="text-center py-8 border-2 border-dashed border-white/5 rounded-2xl"><p class="text-gray-500 text-sm">Markiere Text für eine Notiz.</p></div>`;
             return;
         }
         list.innerHTML = notes.map(n => `
-            <div class="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 mb-4">
+            <div class="bg-[#1c1c1e] p-5 rounded-2xl border border-white/5 mb-4 shadow-sm">
                 <div class="flex justify-between items-start mb-3">
-                    <span class="text-[10px] text-gray-500 font-bold">${new Date(n.date).toLocaleDateString('de-DE')}</span>
-                    <button onclick="app.reader.deleteNote(${n.id})" class="text-gray-600 hover:text-red-500"><i class="fas fa-trash-alt text-xs"></i></button>
+                    <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">${new Date(n.date).toLocaleDateString('de-DE')}</span>
+                    <button onclick="app.reader.deleteNote(${n.id})" class="text-gray-600 hover:text-red-500 transition"><i class="fas fa-trash-alt text-xs"></i></button>
                 </div>
-                <div class="relative pl-4 mb-3"><div class="absolute left-0 top-0 bottom-0 w-1 bg-yellow-500 rounded-full"></div><p class="text-gray-400 text-sm italic">"${n.quote}"</p></div>
-                ${n.note ? `<p class="text-gray-200 mt-2">${n.note}</p>` : ''}
+                <div class="relative pl-4 mb-3"><div class="absolute left-0 top-0 bottom-0 w-1 bg-yellow-500 rounded-full"></div><p class="text-gray-400 text-sm italic line-clamp-4">"${n.quote}"</p></div>
+                ${n.note ? `<p class="text-gray-200 font-medium text-base mt-2">${n.note}</p>` : ''}
             </div>`).join('');
     },
 
