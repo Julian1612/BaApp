@@ -4,9 +4,10 @@
     "title": "E09",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-19T19:55:16.277Z",
+    "added": "2026-02-19T20:17:14.081Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E09.md"
+      "script": "content/itm_grundlagen/scripts/E09.md",
+      "audio": "content/itm_grundlagen/audio/E09.m4a"
     }
   },
   {
@@ -24,10 +25,9 @@
     "title": "E08",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-19T19:55:16.273Z",
+    "added": "2026-02-19T20:08:38.081Z",
     "files": {
       "script": "content/itm_grundlagen/scripts/E08.md",
-      "audio": "content/itm_grundlagen/audio/E08.m4a",
       "video": "content/itm_grundlagen/videos/E08.mp4"
     }
   },

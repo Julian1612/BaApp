@@ -1,0 +1,38 @@
+<div class="main-wrapper">
+  <div class="card-container active-state">
+    <div class="header-nav dimmed">
+      <div class="course-pill-wrapper"><div class="course-pill">{{Kurs}}</div></div>
+      <div class="topic-dimmed">{{Thema}}</div>
+    </div>
+
+    <div class="content-focus spotlight-effect">
+      <div class="question-ref">{{Frage}}</div>
+      <div class="answer-main">{{Antwort}}</div>
+    </div>
+
+    <div class="bento-grid">
+      {{#Real_World_Case}}
+      <details class="bento-item">
+        <summary class="label">🚀 Praxis-Check</summary>
+        <div class="bento-content">{{Real_World_Case}}</div>
+      </details>
+      {{/Real_World_Case}}
+
+      {{#Extra}}
+      <details class="bento-item">
+        <summary class="label">🧠 Deep Dive</summary>
+        <div class="bento-content">{{Extra}}</div>
+      </details>
+      {{/Extra}}
+    </div>
+
+    <div class="footer-area">
+      {{#Mnemonik}}
+      <div class="mnemonic-footer">
+        <span class="glow-star">✦</span> <i>{{Mnemonik}}</i>
+      </div>
+      {{/Mnemonik}}
+      <div class="mastery-line"></div>
+    </div>
+  </div>
+</div>

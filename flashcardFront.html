@@ -1,0 +1,136 @@
+<div class="main-wrapper">
+  <div class="card-container">
+    <div class="header-nav">
+      <div class="course-pill-wrapper"><div class="course-pill">{{Kurs}}</div></div>
+      <div class="topic-dimmed">{{Thema}}</div>
+    </div>
+
+    <div class="content-focus">
+      <div class="question-text">{{Frage}}</div>
+    </div>
+
+    {{#MC_Richitg}}
+    <div class="mc-section" id="mc-module">
+      
+      <div class="mc-trigger-wrapper">
+        <button class="mc-trigger-btn" onclick="startQuiz()">
+          Multiple Choice
+        </button>
+      </div>
+
+      <div id="quiz-interface" class="quiz-container" style="display:none;">
+        <div class="quiz-header">
+          <span class="quiz-label">Wähle die richtige Antwort</span>
+          <button class="joker-pill" id="joker-5050" onclick="trigger5050()">
+            50:50
+          </button>
+        </div>
+        
+        <div class="options-stack" id="options-container">
+          </div>
+      </div>
+
+      <div id="mc-data-store" style="display:none;"
+           data-correct="{{MC_Richitg}}"
+           data-w1="{{MC_Falsch1}}"
+           data-w2="{{MC_Falsch2}}"
+           data-w3="{{MC_Falsch3}}">
+      </div>
+    </div>
+    {{/MC_Richitg}}
+
+    <div class="hints-wrapper">
+      {{#Hinweis_1}}
+      <details class="hint-card">
+        <summary><span class="status-dot"></span>Tipp 01</summary>
+        <div class="hint-content">{{Hinweis_1}}</div>
+      </details>
+      {{/Hinweis_1}}
+      {{#Hinweis_2}}
+      <details class="hint-card">
+        <summary><span class="status-dot"></span>Tipp 02</summary>
+        <div class="hint-content">{{Hinweis_2}}</div>
+      </details>
+      {{/Hinweis_2}}
+    </div>
+  </div>
+</div>
+
+<script>
+// --- LOGIK ---
+function startQuiz() {
+  const store = document.getElementById('mc-data-store');
+  if (!store) return;
+
+  // Antworten sammeln
+  let answers = [
+    { text: store.dataset.correct, type: 'correct' },
+    { text: store.dataset.w1, type: 'wrong' },
+    { text: store.dataset.w2, type: 'wrong' },
+    { text: store.dataset.w3, type: 'wrong' }
+  ].filter(a => a.text && a.text.trim() !== "");
+
+  // Mischen (Fisher-Yates)
+  for (let i = answers.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [answers[i], answers[j]] = [answers[j], answers[i]];
+  }
+
+  // Render
+  const container = document.getElementById('options-container');
+  container.innerHTML = ''; 
+
+  answers.forEach(ans => {
+    const btn = document.createElement('div');
+    btn.className = 'quiz-option';
+    btn.innerHTML = `<span class="opt-text">${ans.text}</span>`;
+    btn.dataset.type = ans.type;
+    btn.onclick = function() { checkAnswer(this, container); };
+    container.appendChild(btn);
+  });
+
+  // UI Switch: Button ausblenden, Interface einblenden
+  document.querySelector('.mc-trigger-wrapper').style.display = 'none';
+  document.getElementById('quiz-interface').style.display = 'block';
+}
+
+function checkAnswer(selectedBtn, container) {
+  if (selectedBtn.classList.contains('locked')) return;
+
+  const allBtns = container.querySelectorAll('.quiz-option');
+  
+  // Alle sperren & richtige Lösung zeigen
+  allBtns.forEach(btn => {
+    btn.classList.add('locked');
+    if (btn.dataset.type === 'correct') {
+      btn.classList.add('reveal-correct'); 
+    }
+  });
+
+  // Falsch gewählt? Rot markieren
+  if (selectedBtn.dataset.type === 'wrong') {
+    selectedBtn.classList.add('reveal-wrong');
+  }
+}
+
+function trigger5050() {
+  const container = document.getElementById('options-container');
+  const jokerBtn = document.getElementById('joker-5050');
+  
+  // Falsche Buttons finden
+  const wrongs = Array.from(container.querySelectorAll('.quiz-option')).filter(b => b.dataset.type === 'wrong');
+  
+  if (wrongs.length < 2) return; 
+
+  // Mischen und 2 ausblenden
+  wrongs.sort(() => Math.random() - 0.5);
+  
+  // Wir nutzen opacity statt display:none, damit das Layout nicht springt
+  wrongs[0].style.opacity = '0.05';
+  wrongs[0].style.pointerEvents = 'none';
+  wrongs[1].style.opacity = '0.05';
+  wrongs[1].style.pointerEvents = 'none';
+
+  jokerBtn.classList.add('used');
+}
+</script>

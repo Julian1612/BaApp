@@ -52,17 +52,11 @@
         <div id="view-reader" class="view-section hidden fixed inset-0 z-[100] bg-[#000000] overflow-y-auto no-scrollbar"></div>
     </main>
 
-    <div id="selection-tooltip" class="hidden fixed z-[60] bg-gray-800 text-white border border-gray-700 shadow-xl flex gap-5 items-center transform -translate-x-1/2 left-1/2 transition-all">
-        <button onclick="app.reader.saveHighlight()" class="font-bold text-base flex items-center gap-3">
-            <i class="fas fa-highlighter text-yellow-400"></i> Notiz speichern
-        </button>
-    </div>
-
     <div id="mini-player" class="hidden fixed left-0 right-0 z-40 bg-[#1c1c1e] border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.6)] transform transition-transform duration-300 translate-y-full" style="bottom: calc(5rem + env(safe-area-inset-bottom));">
         
-        <div class="max-w-xl mx-auto px-4 py-2 h-20 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+        <div class="max-w-xl mx-auto px-4 py-2 h-20 relative flex items-center justify-between">
             
-            <div class="min-w-0 flex flex-col justify-center pr-2">
+            <div class="flex-1 min-w-0 flex flex-col justify-center pr-20">
                 <p id="player-title" class="text-sm font-bold truncate text-white leading-tight mb-0.5">Lade...</p>
                 <div class="flex items-center gap-1.5 opacity-60">
                     <i class="fas fa-podcast text-[11px]"></i>
@@ -70,7 +64,7 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-center gap-5">
+            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-5">
                  <button id="btn-skip-back" class="text-gray-400 active:text-white p-2">
                     <i class="fas fa-undo-alt text-lg"></i>
                  </button>
@@ -84,7 +78,7 @@
                  </button>
             </div>
 
-            <div class="flex justify-end items-center gap-2">
+            <div class="flex justify-end items-center gap-2 z-10">
                  <button id="btn-speed" class="text-sm font-bold text-gray-300 px-3 py-2 rounded-lg hover:bg-white/10">
                     1.0x
                  </button>
@@ -112,7 +106,6 @@
             <button onclick="app.ui.switchTab('foryou')" class="nav-btn flex-1 h-full flex flex-col items-center justify-center gap-1 text-gray-500">
                 <div class="relative">
                     <i class="fas fa-play-circle transform scale-110"></i>
-                    <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
                 </div>
                 <span>4 You</span>
             </button>
@@ -124,15 +117,15 @@
         </div>
     </nav>
     
-    <script src="src/js/modules/spaced-repetition/spaced-repetition.js?v=5"></script>
+    <script src="src/js/modules/spaced-repetition/spaced-repetition.js?v=17"></script>
     <script src="src/js/modules/player/player.js?v=5"></script>
     <script src="src/js/modules/player/player-ui.js?v=5"></script>
-    <script src="src/js/modules/reader/reader.js?v=16"></script>
+    <script src="src/js/modules/reader/reader.js?v=18"></script>
     <script src="src/js/modules/foryou/foryou.js"></script>
     <script src="src/js/modules/foryou/foryou-ui.js"></script>
     <script src="src/js/modules/foryou/foryou-video.js"></script>
-    <script src="src/js/modules/ui/ui.js"></script>
-    <script src="src/js/modules/ui/ui-dashboard.js"></script>
+    <script src="src/js/modules/ui/ui.js?v=17"></script>
+    <script src="src/js/modules/ui/ui-dashboard.js?v=19"></script>
     <script src="src/js/modules/ui/ui-library.js"></script>
     <script src="src/js/modules/ui/ui-nav.js"></script>
     <script src="src/js/main.js"></script>
