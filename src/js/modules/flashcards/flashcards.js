@@ -54,13 +54,13 @@ const Flashcards = {
         const progress = `${Flashcards.currentIndex + 1} / ${Flashcards.deck.length}`;
         
         let html = `
-        <div class="w-full flex justify-between items-center p-4" style="padding-top: max(env(safe-area-inset-top), 40px);">
-            <div class="w-12"></div>
-            <div class="text-sm font-bold text-gray-500 bg-[#2c2c2e] px-4 py-2 rounded-full border border-white/5">${progress}</div>
-            <div class="w-12"></div>
+        <div class="sticky top-0 z-[110] bg-[#1c1c1e]/80 backdrop-blur-xl border-b border-white/10" style="padding-top: max(env(safe-area-inset-top), 40px);">
+            <div class="h-14 px-4 flex justify-between items-center gap-4">
+                <div class="w-12"></div> <!-- Spacer -->
+                <div class="text-sm font-bold text-gray-500 bg-[#2c2c2e] px-4 py-2 rounded-full border border-white/5">${progress}</div>
+                <div class="w-12"></div> <!-- Spacer -->
+            </div>
         </div>
-        
-        <button onclick="Flashcards.close()" class="fixed bottom-32 right-4 z-[60] w-12 h-12 flex items-center justify-center text-gray-500 hover:text-white transition"><i class="fas fa-times text-xl"></i></button>
         
         <div class="flex-1 flex flex-col justify-center items-center p-4 pb-32 overflow-y-auto w-full" onclick="Flashcards.handleTap(event)">
             <div id="card-wrapper" class="w-full max-w-md perspective-1000">
@@ -68,28 +68,32 @@ const Flashcards = {
             </div>
         </div>`;
 
-        if (Flashcards.isFlipped) {
-            html += `
-            <div class="fixed bottom-0 w-full p-4 grid grid-cols-4 gap-3 bg-black/20 backdrop-blur-xl border-t border-white/10" style="padding-bottom: max(env(safe-area-inset-bottom), 24px);">
-                <button onclick="event.stopPropagation(); Flashcards.rate(1)" class="flex flex-col items-center justify-center bg-red-900/90 h-16 p-3 rounded-2xl border border-red-500/30 active:scale-95 transition">
-                    <span class="text-sm font-bold text-red-200">Nochmal</span>
+        // Unified Footer
+        html += `
+        <div id="flashcard-main-footer" class="fixed bottom-0 left-0 right-0 z-[120] bg-black/50 backdrop-blur-xl border-t border-white/10" style="padding-bottom: env(safe-area-inset-bottom);">
+            <div class="flex justify-around items-center h-20 max-w-xl mx-auto">
+                <button onclick="Flashcards.close()" class="flex-1 h-full flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-white transition"><i class="fas fa-times text-xl"></i><span class="text-xs font-medium">Schließen</span></button>
+                
+                ${Flashcards.isFlipped ? `
+                <button onclick="event.stopPropagation(); Flashcards.rate(1)" class="flex-1 h-full flex flex-col items-center justify-center gap-1 text-red-400 active:scale-95 transition">
+                    <i class="fas fa-arrow-rotate-left text-xl"></i><span class="text-xs font-medium">Nochmal</span>
                 </button>
-                <button onclick="event.stopPropagation(); Flashcards.rate(3)" class="flex flex-col items-center justify-center bg-gray-800/90 h-16 p-3 rounded-2xl border border-gray-600/30 active:scale-95 transition">
-                    <span class="text-sm font-bold text-gray-300">Schwer</span>
+                <button onclick="event.stopPropagation(); Flashcards.rate(3)" class="flex-1 h-full flex flex-col items-center justify-center gap-1 text-blue-400 active:scale-95 transition">
+                    <i class="fas fa-face-meh text-xl"></i><span class="text-xs font-medium">Schwer</span>
                 </button>
-                <button onclick="event.stopPropagation(); Flashcards.rate(4)" class="flex flex-col items-center justify-center bg-blue-900/90 h-16 p-3 rounded-2xl border border-blue-500/30 active:scale-95 transition">
-                    <span class="text-sm font-bold text-blue-200">Gut</span>
+                <button onclick="event.stopPropagation(); Flashcards.rate(4)" class="flex-1 h-full flex flex-col items-center justify-center gap-1 text-green-400 active:scale-95 transition">
+                    <i class="fas fa-face-smile text-xl"></i><span class="text-xs font-medium">Gut</span>
                 </button>
-                <button onclick="event.stopPropagation(); Flashcards.rate(5)" class="flex flex-col items-center justify-center bg-green-900/90 h-16 p-3 rounded-2xl border border-green-500/30 active:scale-95 transition">
-                    <span class="text-sm font-bold text-green-200">Einfach</span>
+                <button onclick="event.stopPropagation(); Flashcards.rate(5)" class="flex-1 h-full flex flex-col items-center justify-center gap-1 text-green-300 active:scale-95 transition">
+                    <i class="fas fa-face-grin-stars text-xl"></i><span class="text-xs font-medium">Einfach</span>
                 </button>
-            </div>`;
-        } else {
-            html += `
-            <div class="fixed bottom-0 w-full p-6 text-center pointer-events-none opacity-50" style="padding-bottom: max(env(safe-area-inset-bottom), 30px);">
-                <span class="text-sm font-medium text-gray-400 bg-black/30 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10">Tippen zum Umdrehen</span>
-            </div>`;
-        }
+                ` : `
+                <div class="flex-none w-1/2 h-full flex flex-col items-center justify-center text-center opacity-50 pointer-events-none">
+                    <span class="text-sm font-medium text-gray-400">Tippen zum Umdrehen</span>
+                </div>
+                `}
+            </div>
+        </div>`;
 
         container.innerHTML = html;
     },
@@ -222,4 +226,4 @@ const Flashcards = {
         jokerBtn.classList.add('used');
     }
 };
-window.Flashcards = Flashcards;
+window.Flashcards = Flashcards; 
