@@ -18,6 +18,7 @@ const Player = {
         
         Player.audio.ontimeupdate = Player.updateProgress;
         Player.audio.onended = () => Player.updateIcon(false);
+        Player.audio.ondurationchange = Player.updateProgress; // Update duration when metadata loads
     },
 
     close: () => {
