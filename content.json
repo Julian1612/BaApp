@@ -4,9 +4,10 @@
     "title": "E09",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T19:44:48.895Z",
+    "added": "2026-02-19T20:17:14.081Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E09.md"
+      "script": "content/itm_grundlagen/scripts/E09.md",
+      "audio": "content/itm_grundlagen/audio/E09.m4a"
     }
   },
   {
@@ -14,7 +15,7 @@
     "title": "E09",
     "subject": "Org. & Projekte",
     "subjectKey": "organisation_projekte",
-    "added": "2026-02-17T19:45:13.566Z",
+    "added": "2026-02-19T19:55:34.742Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E09.md"
     }
@@ -24,10 +25,9 @@
     "title": "E08",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T19:44:48.895Z",
+    "added": "2026-02-19T20:33:46.567Z",
     "files": {
       "script": "content/itm_grundlagen/scripts/E08.md",
-      "audio": "content/itm_grundlagen/audio/E08.m4a",
       "video": "content/itm_grundlagen/videos/E08.mp4"
     }
   },
@@ -36,7 +36,7 @@
     "title": "E08",
     "subject": "Org. & Projekte",
     "subjectKey": "organisation_projekte",
-    "added": "2026-02-17T19:45:13.566Z",
+    "added": "2026-02-19T19:55:34.733Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E08.md",
       "audio": "content/organisation_projekte/audio/E08.m4a"
@@ -47,7 +47,7 @@
     "title": "E07",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T19:44:48.895Z",
+    "added": "2026-02-19T19:55:16.271Z",
     "files": {
       "script": "content/itm_grundlagen/scripts/E07.md",
       "audio": "content/itm_grundlagen/audio/E07.m4a",
@@ -59,7 +59,7 @@
     "title": "E07",
     "subject": "Org. & Projekte",
     "subjectKey": "organisation_projekte",
-    "added": "2026-02-17T19:45:13.566Z",
+    "added": "2026-02-19T19:55:34.663Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E07.md",
       "audio": "content/organisation_projekte/audio/E07.m4a"
@@ -70,7 +70,7 @@
     "title": "E06",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T19:44:48.895Z",
+    "added": "2026-02-19T19:55:16.268Z",
     "files": {
       "script": "content/itm_grundlagen/scripts/E06.md",
       "audio": "content/itm_grundlagen/audio/E06.m4a",
@@ -82,7 +82,7 @@
     "title": "E06",
     "subject": "Org. & Projekte",
     "subjectKey": "organisation_projekte",
-    "added": "2026-02-17T19:45:13.566Z",
+    "added": "2026-02-19T19:55:34.661Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E06.md",
       "audio": "content/organisation_projekte/audio/E06.m4a"
@@ -93,7 +93,7 @@
     "title": "E05",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T19:44:48.895Z",
+    "added": "2026-02-19T19:55:16.266Z",
     "files": {
       "script": "content/itm_grundlagen/scripts/E05.md",
       "audio": "content/itm_grundlagen/audio/E05.m4a",
@@ -105,7 +105,7 @@
     "title": "E05",
     "subject": "Org. & Projekte",
     "subjectKey": "organisation_projekte",
-    "added": "2026-02-17T19:45:13.565Z",
+    "added": "2026-02-19T19:55:34.639Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E05.md",
       "audio": "content/organisation_projekte/audio/E05.m4a",
@@ -117,7 +117,7 @@
     "title": "E04",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T19:44:48.895Z",
+    "added": "2026-02-19T19:55:16.243Z",
     "files": {
       "script": "content/itm_grundlagen/scripts/E04.md",
       "audio": "content/itm_grundlagen/audio/E04.m4a"
@@ -128,7 +128,7 @@
     "title": "E04",
     "subject": "Org. & Projekte",
     "subjectKey": "organisation_projekte",
-    "added": "2026-02-17T19:45:13.565Z",
+    "added": "2026-02-19T19:55:34.615Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E04.md",
       "audio": "content/organisation_projekte/audio/E04.m4a",
@@ -140,7 +140,7 @@
     "title": "E03",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T19:44:48.895Z",
+    "added": "2026-02-19T19:55:16.218Z",
     "files": {
       "script": "content/itm_grundlagen/scripts/E03.md",
       "audio": "content/itm_grundlagen/audio/E03.m4a",
@@ -152,7 +152,7 @@
     "title": "E03",
     "subject": "Org. & Projekte",
     "subjectKey": "organisation_projekte",
-    "added": "2026-02-17T19:45:13.565Z",
+    "added": "2026-02-19T19:55:34.586Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E03.md",
       "audio": "content/organisation_projekte/audio/E03.m4a",
@@ -164,7 +164,7 @@
     "title": "E02",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T19:44:48.895Z",
+    "added": "2026-02-19T19:55:16.213Z",
     "files": {
       "script": "content/itm_grundlagen/scripts/E02.md",
       "audio": "content/itm_grundlagen/audio/E02.m4a",
@@ -176,7 +176,7 @@
     "title": "E02",
     "subject": "Org. & Projekte",
     "subjectKey": "organisation_projekte",
-    "added": "2026-02-17T19:45:13.565Z",
+    "added": "2026-02-19T19:55:34.572Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E02.md",
       "audio": "content/organisation_projekte/audio/E02.m4a",
@@ -188,10 +188,8 @@
     "title": "E01",
     "subject": "ITM Grundlagen",
     "subjectKey": "itm_grundlagen",
-    "added": "2026-02-17T19:44:48.894Z",
+    "added": "2026-02-19T19:55:17.513Z",
     "files": {
-      "script": "content/itm_grundlagen/scripts/E01.md",
-      "audio": "content/itm_grundlagen/audio/E01.m4a",
       "video": "content/itm_grundlagen/videos/E01.mp4"
     }
   },
@@ -200,7 +198,7 @@
     "title": "E01",
     "subject": "Org. & Projekte",
     "subjectKey": "organisation_projekte",
-    "added": "2026-02-17T14:53:49.899Z",
+    "added": "2026-02-19T19:58:47.010Z",
     "files": {
       "script": "content/organisation_projekte/scripts/E01.md",
       "video": "content/organisation_projekte/videos/E01.mp4"
