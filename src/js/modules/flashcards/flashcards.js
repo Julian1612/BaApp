@@ -60,7 +60,7 @@ const Flashcards = {
             <div class="w-12"></div>
         </div>
         
-        <button onclick="Flashcards.close()" class="fixed bottom-32 right-4 z-[60] w-12 h-12 bg-[#2c2c2e]/90 backdrop-blur-md rounded-full flex items-center justify-center text-white shadow-lg border border-white/10 active:scale-95 transition"><i class="fas fa-times text-xl"></i></button>
+        <button onclick="Flashcards.close()" class="fixed bottom-32 right-4 z-[60] w-12 h-12 flex items-center justify-center text-gray-500 hover:text-white transition bg-[#2c2c2e]/90 backdrop-blur-md rounded-full shadow-lg border border-white/10"><i class="fas fa-times text-xl"></i></button>
         
         <div class="flex-1 flex flex-col justify-center items-center p-4 pb-32 overflow-y-auto w-full" onclick="Flashcards.handleTap(event)">
             <div id="card-wrapper" class="w-full max-w-md perspective-1000">

@@ -34,7 +34,8 @@ const Reader = {
 
         try {
             const res = await fetch(url);
-            const text = await res.text();
+            let text = await res.text();
+            text = Reader._convertTabTablesToMarkdown(text); // Convert tab-delimited tables
             let html = Reader.converter.makeHtml(text);
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = html;
@@ -217,6 +218,68 @@ const Reader = {
             Reader.renderNotes();
         }
         Reader.closeModals();
+    },
+
+    _convertTabTablesToMarkdown: (text) => {
+        const lines = text.split('\n');
+        let inTable = false;
+        let markdownTable = [];
+        const processedLines = [];
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            // Heuristic: A line is part of a potential table if it contains at least one tab
+            // and the previous line also contained at least one tab, or it's the first line after a blank line
+            const isTabDelimited = line.includes('\t');
+
+            if (isTabDelimited) {
+                if (!inTable) {
+                    // Start of a new table
+                    inTable = true;
+                    markdownTable = [];
+                    // Add any preceding lines that are not part of the table
+                    if (processedLines.length > 0 && !processedLines[processedLines.length - 1].trim()) {
+                        // If the previous line was blank, remove it and add it later to avoid extra blank lines above the table
+                        processedLines.pop();
+                    }
+                }
+                markdownTable.push(line);
+            } else {
+                if (inTable) {
+                    // End of a table, process and append it
+                    processedLines.push(Reader._formatTable(markdownTable));
+                    inTable = false;
+                }
+                processedLines.push(line);
+            }
+        }
+
+        // If the text ends with a table, process it
+        if (inTable) {
+            processedLines.push(Reader._formatTable(markdownTable));
+        }
+
+        return processedLines.join('\n');
+    },
+
+    _formatTable: (tableLines) => {
+        if (tableLines.length === 0) return '';
+
+        const header = tableLines[0].split('\t').map(h => h.trim());
+        const numColumns = header.length;
+        const headerSeparator = Array(numColumns).fill('---').join('|');
+
+        let markdown = `| ${header.join(' | ')} |\n`;
+        markdown += `|${headerSeparator}|\n`;
+
+        for (let i = 1; i < tableLines.length; i++) {
+            const row = tableLines[i].split('\t').map(c => c.trim());
+            // Ensure row has the same number of columns as header
+            const paddedRow = row.concat(Array(numColumns - row.length).fill(''));
+            markdown += `| ${paddedRow.join(' | ')} |\n`;
+        }
+
+        return markdown;
     }
 };
-window.Reader = Reader;
+window.Reader = Reader; 
