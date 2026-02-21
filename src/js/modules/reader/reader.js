@@ -111,7 +111,7 @@ const Reader = {
     _getTemplate: (title, audioUrl, id, hasFlashcards) => `
         <div class="sticky top-0 z-[110] bg-[#1c1c1e]/80 backdrop-blur-xl border-b border-white/10" style="padding-top: max(env(safe-area-inset-top), 40px);">
             <div class="h-14 px-4 flex justify-between items-center gap-4">
-                <button onclick="Reader.close()" class="w-12 h-12 flex items-center justify-center text-gray-400 active:text-white transition"><i class="fas fa-times text-2xl"></i></button>
+                <div class="w-12"></div> <!-- Spacer -->
                 <h2 class="text-sm font-bold truncate text-white flex-1 text-center">${title}</h2>
                 <div class="w-12"></div> <!-- Spacer -->
             </div>
@@ -130,6 +130,7 @@ const Reader = {
         <!-- MAIN ACTIONS FOOTER -->
         <div id="reader-main-footer" class="fixed bottom-0 left-0 right-0 z-[120] bg-black/50 backdrop-blur-xl border-t border-white/10" style="padding-bottom: env(safe-area-inset-bottom);">
             <div class="flex justify-around items-center h-20 max-w-xl mx-auto">
+                <button onclick="Reader.close()" class="flex-1 h-full flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-white transition"><i class="fas fa-times text-xl"></i><span class="text-xs font-medium">Schließen</span></button>
                 ${hasFlashcards ? `<button onclick="Flashcards.open('${id}')" class="flex-1 h-full flex flex-col items-center justify-center gap-1 text-green-400"><i class="fas fa-clone text-xl"></i><span class="text-xs font-medium">Lernen</span></button>` : ''}
                 ${audioUrl ? `<button onclick="app.player.load('${audioUrl}', '${title.replace(/'/g, "\\'")}', '${id}')" class="flex-1 h-full flex flex-col items-center justify-center gap-1 text-blue-400"><i class="fas fa-headphones text-xl"></i><span class="text-xs font-medium">Hören</span></button>` : ''}
                 <button id="reader-edit-btn" onclick="Reader.toggleEdit()" class="flex-1 h-full flex flex-col items-center justify-center gap-1 text-yellow-400"><i class="fas fa-pen-nib text-xl"></i><span class="text-xs font-medium">Notiz</span></button>
