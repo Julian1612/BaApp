@@ -3,14 +3,14 @@ window.app = {
     ui: UI,
     player: Player,
     reader: Reader,
-    foryou: ForYou, // NEU HINZUGEFÜGT
+    foryou: ForYou,
     data: []
 };
 
 // Start
 document.addEventListener('DOMContentLoaded', async () => {
     Player.init();
-    ForYou.init(); // NEU HINZUGEFÜGT
+    ForYou.init();
     
     try {
         // Cache-Busting für content.json

@@ -336,3 +336,109 @@ body {
     background-color: #000;
     pointer-events: none;
 }
+
+/* --- 3D Flip Utilities --- */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Dark Mode Overrides */
+html.dark {
+    --bg-body: #121212; /* Darker background */
+    --bg-card: #1e1e1e; /* Darker card background */
+    --text-primary: #e0e0e0; /* Lighter text */
+    --text-secondary: #b0b0b0; /* Lighter secondary text */
+    --accent-blue: #64b5f6; /* A slightly softer blue for dark mode */
+}
+
+html.dark body {
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+}
+
+html.dark .glass {
+    background: rgba(18, 18, 18, 0.7); /* Darker glass background */
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+html.dark .prose {
+    color: var(--text-primary);
+}
+
+html.dark .prose h1,
+html.dark .prose h2,
+html.dark .prose h3,
+html.dark .prose h4,
+html.dark .prose h5,
+html.dark .prose h6 {
+    color: var(--text-primary);
+}
+
+html.dark .prose strong {
+    color: var(--text-primary);
+}
+
+html.dark .prose blockquote {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+}
+
+html.dark .prose code {
+    background-color: rgba(255, 255, 255, 0.15); /* Slightly lighter for contrast */
+}
+
+html.dark .prose pre {
+    background-color: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html.dark .prose th {
+    background-color: #3a3a3c;
+    color: var(--text-primary);
+}
+
+html.dark #view-library > div.sticky {
+    background-color: var(--bg-body) !important;
+}
+
+html.dark #view-library > div.sticky::before {
+    background-color: var(--bg-body);
+}
+
+/* Toggle switch specific styles */
+html.dark .dot {
+    transform: translateX(100%);
+    background-color: #fff;
+}
+html.dark .block.bg-gray-600 {
+    background-color: #4a4a4a;
+}
+html.dark .block.bg-blue-600 {
+    background-color: var(--accent-blue);
+}
+
+/* Font Size Classes */
+html.font-small {
+    font-size: 14px; /* Smaller base font size */
+}
+
+html.font-medium {
+    font-size: 16px; /* Default base font size */
+}
+
+html.font-large {
+    font-size: 18px; /* Larger base font size */
+}

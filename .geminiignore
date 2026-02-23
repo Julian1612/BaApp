@@ -1,0 +1,6 @@
+content/
+public/
+.vscode/
+.gitignore
+content.js
+README.md
